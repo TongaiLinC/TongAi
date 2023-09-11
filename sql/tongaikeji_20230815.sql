@@ -466,6 +466,19 @@ values ('1059', '预览代码', '116', '5', '#', '', '', 1, 0, 'F', '0', '0', 't
 insert into sys_menu
 values ('1060', '生成代码', '116', '6', '#', '', '', 1, 0, 'F', '0', '0', 'tool:gen:code', '#', 'admin', sysdate(), '',
         null, '');
+-- 公告阅读菜单权限
+INSERT INTO sys_menu
+VALUES (2021, '通知公告阅读状态更新', 2014, 2, '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:notice:edit', '#', 'admin',
+        sysdate(), '', NULL, '');
+INSERT INTO sys_menu
+VALUES (2015, '通知公告查看', 2014, 1, '#', '', NULL, 1, 0, 'F', '0', '0', 'system:notice:preview', '#', 'admin',
+        sysdate(), '', null, '');
+INSERT INTO sys_menu
+VALUES (2014, '消息中心', 1, 8, 'notice/read', 'system/notice/read', NULL, 1, 1, 'C', '1', '0', 'system:notice:list',
+        'message', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu
+VALUES (2013, '公告查看', 107, 5, '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:notice:preview', '#', 'admin', sysdate(),
+        '', NULL, '');
 
 
 -- ----------------------------
@@ -1017,23 +1030,25 @@ values ('2', '维护通知：2018-07-01 同乂系统凌晨维护', '1', '维护�
 -- ----------------------------
 -- 18、通知公告阅读表
 -- ----------------------------
-CREATE TABLE `tongaikeji`.`sys_notice_read`
+drop table if exists `sys_notice_read`;
+create table `sys_notice_read`
 (
-    `id`          bigint       NOT NULL COMMENT 'ID编号',
-    `notice_id`   bigint       NULL COMMENT '通知ID',
-    `is_read`     char(1)      NULL DEFAULT '0' COMMENT '是否已读0-未读，1-已读（当通知/公告为非全体通知时使用）',
-    `receiver_id` bigint       NULL COMMENT '通知接收者ID（0-全体成员）',
-    `user_id`     bigint       NULL DEFAULT NULL COMMENT '数据所属人ID',
-    `dept_id`     bigint       NULL DEFAULT NULL COMMENT '部门ID',
-    `del_flag`    char(1)      NULL DEFAULT '0' COMMENT '删除标志（0代表存在 2代表删除）',
-    `create_by`   varchar(64)  NULL DEFAULT '' COMMENT '创建者',
-    `create_time` datetime     NULL DEFAULT NULL COMMENT '创建时间',
-    `update_by`   varchar(64)  NULL DEFAULT '' COMMENT '更新者',
-    `update_time` datetime     NULL DEFAULT NULL COMMENT '更新时间',
-    `remark`      varchar(500) NULL DEFAULT '' COMMENT '备注',
-    PRIMARY KEY (`id`)
-    INDEX `idx_receiverId`(`is_read`, `receiver_id`) USING BTREE COMMENT '通过是否接受者ID查询未读消息'
-) COMMENT = '通知公告阅读记录';
+    `id`          bigint not null auto_increment comment 'id编号',
+    `notice_id`   bigint       default null comment '通知id',
+    `is_read`     char(1)      default '0' comment '是否已读0-未读，1-已读（当通知/公告为非全体通知时使用）',
+    `receiver_id` bigint       default null comment '通知接收者id（0-全体成员）',
+    `del_flag`    char(1)      default '0' comment '删除标志（0代表存在 2代表删除）',
+    `create_by`   varchar(64)  default '' comment '创建者',
+    `create_time` datetime     default null comment '创建时间',
+    `update_by`   varchar(64)  default '' comment '更新者',
+    `update_time` datetime     default null comment '更新时间',
+    `remark`      varchar(500) default '' comment '备注',
+    primary key (`id`),
+    key `idx_receiverid` (`is_read`, `receiver_id`) using btree comment '通过是否接受者id查询未读消息',
+    key `uni_id` (`notice_id`, `receiver_id`) using btree comment '设置每条通知每位用户只能记录一次的唯一索引'
+) engine = innodb
+  auto_increment = 1
+  collate = utf8mb4_0900_ai_ci comment ='通知公告阅读记录';
 
 
 -- ----------------------------
