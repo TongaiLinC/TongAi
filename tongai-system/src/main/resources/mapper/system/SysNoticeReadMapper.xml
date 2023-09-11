@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tawl.system.mapper.SysNoticeReadMapper">
+
+    <resultMap type="SysNoticeRead" id="SysNoticeReadResult">
+        <result property="id"    column="id"    />
+        <result property="noticeId"    column="notice_id"    />
+        <result property="isRead"    column="is_read"    />
+        <result property="receiverId"    column="receiver_id"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysNoticeReadVo">
+        select id, notice_id, is_read, receiver_id, del_flag, create_by, create_time, update_by, update_time, remark
+        from sys_notice_read
+    </sql>
+
+    <select id="selectSysNoticeReadList" parameterType="SysNoticeRead" resultMap="SysNoticeReadResult">
+        <include refid="selectSysNoticeReadVo"/>
+        <where>
+            <if test="noticeId != null "> and notice_id = #{noticeId}</if>
+            <if test="isRead != null  and isRead != ''"> and is_read = #{isRead}</if>
+            <if test="receiverId != null "> and receiver_id = #{receiverId}</if>
+        </where>
+    </select>
+
+    <select id="selectSysNoticeReadById" parameterType="Long" resultMap="SysNoticeReadResult">
+        <include refid="selectSysNoticeReadVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysNoticeRead" parameterType="SysNoticeRead">
+        insert into sys_notice_read
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="noticeId != null">notice_id,</if>
+            <if test="isRead != null">is_read,</if>
+            <if test="receiverId != null">receiver_id,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="noticeId != null">#{noticeId},</if>
+            <if test="isRead != null">#{isRead},</if>
+            <if test="receiverId != null">#{receiverId},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysNoticeRead" parameterType="SysNoticeRead">
+        update sys_notice_read
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="noticeId != null">notice_id = #{noticeId},</if>
+            <if test="isRead != null">is_read = #{isRead},</if>
+            <if test="receiverId != null">receiver_id = #{receiverId},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysNoticeReadById" parameterType="Long">
+        delete from sys_notice_read where id = #{id}
+    </delete>
+
+    <delete id="deleteSysNoticeReadByIds" parameterType="String">
+        delete from sys_notice_read where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getUnReadCount" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM sys_notice n
+        WHERE n.status = '1' and NOT EXISTS
+            (SELECT 1 FROM sys_notice_read nr
+                      WHERE nr.notice_id = n.notice_id AND nr.receiver_id = #{receiverId} AND nr.is_read = '1')
+          AND
+            (n.user_ids = '0' OR EXISTS
+                (SELECT 1 FROM sys_notice_read nr WHERE nr.receiver_id = #{receiverId} AND nr.is_read = '0'))
+    </select>
+</mapper>

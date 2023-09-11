@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.tawl</groupId>
+        <artifactId>tongai</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <artifactId>tongai-controller</artifactId>
+    <description>
+        系统接口管理
+    </description>
+
+    <dependencies>
+
+        <!-- knife4j swagger文档增强-->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
+        </dependency>
+
+
+        <!-- Mysql驱动包 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <!-- 核心模块-->
+        <dependency>
+            <groupId>com.tawl</groupId>
+            <artifactId>tongai-framework</artifactId>
+        </dependency>
+
+        <!-- 定时任务-->
+        <dependency>
+            <groupId>com.tawl</groupId>
+            <artifactId>tongai-quartz</artifactId>
+        </dependency>
+
+        <!-- 代码生成-->
+        <dependency>
+            <groupId>com.tawl</groupId>
+            <artifactId>tongai-generator</artifactId>
+        </dependency>
+    </dependencies>
+</project>
