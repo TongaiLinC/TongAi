@@ -60,6 +60,21 @@ public class SecurityUtils
     }
 
     /**
+     * 获取用户手机号
+     **/
+    public static String getPhoneNumber()
+    {
+        try
+        {
+            return getLoginUser().getUser().getPhonenumber();
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException("获取用户手机号异常", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    /**
      * 获取用户
      **/
     public static LoginUser getLoginUser()
