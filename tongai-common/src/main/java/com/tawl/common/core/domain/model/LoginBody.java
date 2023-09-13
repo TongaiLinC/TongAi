@@ -16,6 +16,10 @@ public class LoginBody
      * 用户密码
      */
     private String password;
+    /**
+     * 手机号
+     */
+    private String phone;
 
     /**
      * 验证码
@@ -26,6 +30,14 @@ public class LoginBody
      * 唯一标识
      */
     private String uuid;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public String getUsername()
     {
