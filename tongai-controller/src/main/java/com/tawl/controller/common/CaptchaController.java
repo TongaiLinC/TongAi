@@ -6,12 +6,14 @@ import com.tawl.common.constant.CacheConstants;
 import com.tawl.common.constant.Constants;
 import com.tawl.common.core.domain.AjaxResult;
 import com.tawl.common.core.redis.RedisCache;
+import com.tawl.common.utils.cloud.CloudUtils;
 import com.tawl.common.utils.sign.Base64;
 import com.tawl.common.utils.uuid.IdUtils;
 import com.tawl.system.service.ISysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -49,6 +51,8 @@ public class CaptchaController
         AjaxResult ajax = AjaxResult.success();
         boolean captchaEnabled = configService.selectCaptchaEnabled();
         ajax.put("captchaEnabled", captchaEnabled);
+        boolean smsCodeEnabled = configService.selectSmsCodeEnabled();
+        ajax.put("smsCodeEnabled", smsCodeEnabled);
         if (!captchaEnabled)
         {
             return ajax;
@@ -91,5 +95,17 @@ public class CaptchaController
         ajax.put("uuid", uuid);
         ajax.put("img", Base64.encode(os.toByteArray()));
         return ajax;
+    }
+    /**
+     * 生成验证码
+     */
+    @GetMapping("/smsCode/{phone}")
+    public AjaxResult getSmsCode(@PathVariable String phone) throws IOException
+    {
+        // 保存验证码信息Key
+        String verifyKey = CacheConstants.SMS_CODE_KEY + phone;
+        String code = CloudUtils.sendSmsVerificationCode(phone);
+        redisCache.setCacheObject(verifyKey, code, Constants.SMSCODE_EXPIRATION, TimeUnit.MINUTES);
+        return AjaxResult.success();
     }
 }

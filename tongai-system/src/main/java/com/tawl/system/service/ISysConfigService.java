@@ -35,6 +35,13 @@ public interface ISysConfigService
     public boolean selectCaptchaEnabled();
 
     /**
+     * 获取短信验证码开关
+     *
+     * @return true开启，false关闭
+     */
+    public boolean selectSmsCodeEnabled();
+
+    /**
      * 查询参数配置列表
      * 
      * @param config 参数配置信息

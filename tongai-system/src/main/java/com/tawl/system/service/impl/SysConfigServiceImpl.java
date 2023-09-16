@@ -98,6 +98,22 @@ public class SysConfigServiceImpl implements ISysConfigService
     }
 
     /**
+     * 获取短信验证码开关
+     *
+     * @return true开启，false关闭
+     */
+    @Override
+    public boolean selectSmsCodeEnabled()
+    {
+        String smsEnabled = selectConfigByKey("sys.account.smsEnabled");
+        if (StringUtils.isEmpty(smsEnabled))
+        {
+            return true;
+        }
+        return Convert.toBool(smsEnabled);
+    }
+
+    /**
      * 查询参数配置列表
      * 
      * @param config 参数配置信息

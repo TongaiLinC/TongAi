@@ -6,12 +6,12 @@ import com.tawl.common.enums.UserStatus;
 import com.tawl.common.exception.ServiceException;
 import com.tawl.common.utils.MessageUtils;
 import com.tawl.common.utils.StringUtils;
+import com.tawl.common.exception.user.UserPhoneNotExistsException;
 import com.tawl.system.service.ISysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
  * @author tongai
  */
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService
+public class UserDetailsServiceImpl implements CustomUsersDetailsService
 {
     private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
@@ -30,6 +30,9 @@ public class UserDetailsServiceImpl implements UserDetailsService
     
     @Autowired
     private SysPasswordService passwordService;
+
+    @Autowired
+    private SysSmsCodeService smsCodeService;
 
     @Autowired
     private SysPermissionService permissionService;
@@ -56,6 +59,29 @@ public class UserDetailsServiceImpl implements UserDetailsService
 
         passwordService.validate(user);
 
+        return createLoginUser(user);
+    }
+
+    @Override
+    public UserDetails loadUserByPhone(String phone) throws UserPhoneNotExistsException {
+        SysUser user = userService.selectUserByPhone(phone);
+        if (StringUtils.isNull(user))
+        {
+            log.info("登录用户：{} 不存在.", phone);
+            throw new ServiceException(MessageUtils.message("user.not.exists"));
+        }
+        else if (UserStatus.DELETED.getCode().equals(user.getDelFlag()))
+        {
+            log.info("登录用户：{} 已被删除.", phone);
+            throw new ServiceException(MessageUtils.message("user.password.delete"));
+        }
+        else if (UserStatus.DISABLE.getCode().equals(user.getStatus()))
+        {
+            log.info("登录用户：{} 已被停用.", phone);
+            throw new ServiceException(MessageUtils.message("user.blocked"));
+        }
+
+        smsCodeService.validate();
         return createLoginUser(user);
     }
 

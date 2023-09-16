@@ -20,7 +20,7 @@ public class CacheConstants
     /**
      * 短信验证码 redis key
      */
-    public static final String SMS_CODE_KEY = "phone_codes:";
+    public static final String SMS_CODE_KEY = "sms_codes:";
 
     /**
      * 参数管理 cache key
