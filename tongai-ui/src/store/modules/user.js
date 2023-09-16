@@ -43,10 +43,11 @@ const user = {
     Login({ commit }, userInfo) {
       const username = userInfo.username.trim()
       const password = userInfo.password
+      const phone = userInfo.phone
       const code = userInfo.code
       const uuid = userInfo.uuid
       return new Promise((resolve, reject) => {
-        login(username, password, code, uuid).then(res => {
+        login(username, password, phone, code, uuid).then(res => {
           setToken(res.token)
           // 获取未读通知数量
           setTimeout(() => {
@@ -62,7 +63,7 @@ const user = {
               }
               commit('SET_UNREAD_COUNT', res)
             })
-          },1200)
+          },800)
           commit('SET_TOKEN', res.token)
           resolve()
         }).catch(error => {

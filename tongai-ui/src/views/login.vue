@@ -2,42 +2,72 @@
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
       <h3 class="title">同乂管理系统</h3>
-      <el-form-item prop="username">
-        <el-input
-            v-model="loginForm.username"
-            type="text"
-            auto-complete="off"
-            placeholder="账号"
-        >
-          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
-        </el-input>
-      </el-form-item>
-      <el-form-item prop="password">
-        <el-input
-            v-model="loginForm.password"
-            type="password"
-            auto-complete="off"
-            placeholder="密码"
-            @keyup.enter.native="handleLogin"
-        >
-          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon"/>
-        </el-input>
-      </el-form-item>
-      <el-form-item prop="code" v-if="captchaEnabled">
-        <el-input
-            v-model="loginForm.code"
-            auto-complete="off"
-            placeholder="验证码"
-            style="width: 63%"
-            @keyup.enter.native="handleLogin"
-        >
-          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
-        </el-input>
-        <div class="login-code">
-          <img :src="codeUrl" @click="getCode" class="login-code-img"/>
-        </div>
-      </el-form-item>
-      <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
+      <el-tabs v-model="activeName" type="border-card" style="border-radius: 10px;height: 230px">
+        <el-tab-pane label="账号登录" name="userAccount">
+          <el-form-item prop="username">
+            <el-input
+                v-model="loginForm.username"
+                type="text"
+                auto-complete="off"
+                placeholder="账号"
+            >
+              <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input
+                v-model="loginForm.password"
+                type="password"
+                auto-complete="off"
+                placeholder="密码"
+                @keyup.enter.native="handleLogin"
+            >
+              <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon"/>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="code" v-if="captchaEnabled">
+            <el-input
+                v-model="loginForm.code"
+                auto-complete="off"
+                placeholder="验证码"
+                style="width: 63%"
+                @keyup.enter.native="handleLogin"
+            >
+              <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
+            </el-input>
+            <div class="login-code">
+              <img :src="codeUrl" @click="getCode" class="login-code-img"/>
+            </div>
+          </el-form-item>
+          <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
+        </el-tab-pane>
+        <el-tab-pane label="手机登录" name="userPhone">
+          <el-form-item prop="phone">
+            <el-input
+                v-model="loginForm.phone"
+                type="text"
+                auto-complete="off"
+                placeholder="手机号"
+            >
+              <template slot="prepend">+86</template>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="code">
+            <el-input
+                v-model="loginForm.code"
+                type="text"
+                auto-complete="off"
+                placeholder="验证码"
+                @keyup.enter.native="handleLogin"
+            >
+              <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
+              <template slot="append">
+                <el-button type="text" :disabled="disable" style="width: 70px;margin-left: 5px;margin-right: 5px" @click="getSmsCode">{{ codeText }}</el-button>
+              </template>
+            </el-input>
+          </el-form-item>
+        </el-tab-pane>
+      </el-tabs>
       <el-form-item style="width:100%;">
         <el-row :gutter="5">
           <el-col :span="register?12:24">
@@ -46,7 +76,7 @@
                 :loading="loading"
                 size="medium"
                 type="primary"
-                style="width:100%;"
+                style="width:100%;margin-top: 15px"
                 @click.native.prevent="handleLogin"
             >
               <span v-if="!loading">登 录</span>
@@ -69,36 +99,70 @@
 
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2023 tongai.com All Rights Reserved.</span>
+      <span>Copyright © 2018-2023 tongai.vip All Rights Reserved.</span>
     </div>
   </div>
 </template>
 
 <script>
-import {getCodeImg} from '@/api/login'
+import { getCodeImg, getSmsCode } from '@/api/login'
 import Cookies from 'js-cookie'
 import {decrypt, encrypt} from '@/utils/jsencrypt'
+import { validPhone } from '@/utils/validate'
 
 export default {
   name: 'Login',
   data() {
+    var validatePhone = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入手机号'));
+      } else {
+        if (this.loginForm.phone !== '') {
+          if (!validPhone(this.loginForm.phone)) {
+            callback(new Error('请输入正确的手机号'))
+          }
+        }
+        callback();
+      }
+    };
+    var validateUserName = (rule, value, callback) => {
+      if (!this.loginForm.phone && value === '') {
+        callback(new Error('请输入用户名'));
+      }
+      callback()
+    };
+    var validatePassword = (rule, value, callback) => {
+      if (!this.loginForm.phone && value === '') {
+        callback(new Error('请输入密码'));
+      }
+      callback();
+    };
     return {
       codeUrl: '',
+      codeText: '获取验证码',
+      disable: false,
+      activeName: 'userAccount',
       loginForm: {
-        username: 'admin',
-        password: 'admin123',
+        username: '',
+        password: '',
+        phone: '',
         rememberMe: false,
         code: '',
         uuid: ''
       },
       loginRules: {
         username: [
-          { required: true, trigger: 'blur', message: '请输入您的账号' }
+          { required: true, trigger: 'blur', validator: validateUserName}
         ],
         password: [
-          { required: true, trigger: 'blur', message: '请输入您的密码' }
+          { required: true, trigger: 'blur', validator: validatePassword }
         ],
-        code: [{ required: true, trigger: 'change', message: '请输入验证码' }]
+        phone: [
+            { required: true, trigger: 'blur', validator: validatePhone }
+        ],
+        code: [
+            { required: true, trigger: 'change', message: '请输入验证码' }
+        ]
       },
       loading: false,
       // 验证码开关
@@ -128,6 +192,23 @@ export default {
           this.codeUrl = 'data:image/gif;base64,' + <res className="img"></res>
           this.loginForm.uuid = res.uuid
         }
+      })
+    },
+    getSmsCode() {
+      this.disable = true
+      let times = 60
+      getSmsCode(this.loginForm.phone).then(res => {
+        this.$message.success(res.msg)
+        let time = setInterval(() => {
+          if (times === 0){
+            clearInterval(time)
+            this.disable = false
+            this.codeText = '获取验证码'
+            return;
+          }
+          times = times - 1
+          this.codeText = times + "秒后重试"
+        },1000)
       })
     },
     getCookie() {
@@ -164,6 +245,9 @@ export default {
           })
         }
       })
+    },
+    handleClick(tab, event) {
+
     }
   }
 }
