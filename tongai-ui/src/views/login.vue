@@ -2,7 +2,7 @@
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
       <h3 class="title">同乂管理系统</h3>
-      <el-tabs v-model="activeName" type="border-card" style="border-radius: 10px;height: 230px">
+      <el-tabs v-model="activeName" type="border-card" style="border-radius: 10px;margin-bottom: 15px">
         <el-tab-pane label="账号登录" name="userAccount">
           <el-form-item prop="username">
             <el-input
@@ -114,10 +114,10 @@ export default {
   name: 'Login',
   data() {
     var validatePhone = (rule, value, callback) => {
-      if (value === '') {
+      if (this.activeName === 'userPhone' && value === '') {
         callback(new Error('请输入手机号'));
       } else {
-        if (this.loginForm.phone !== '') {
+        if (this.activeName === 'userPhone' && this.loginForm.phone !== '') {
           if (!validPhone(this.loginForm.phone)) {
             callback(new Error('请输入正确的手机号'))
           }
@@ -126,16 +126,23 @@ export default {
       }
     };
     var validateUserName = (rule, value, callback) => {
-      if (!this.loginForm.phone && value === '') {
+      if (this.activeName === 'userAccount' &&value === '') {
         callback(new Error('请输入用户名'));
       }
       callback()
     };
     var validatePassword = (rule, value, callback) => {
-      if (!this.loginForm.phone && value === '') {
+      if (this.activeName === 'userAccount' &&value === '') {
         callback(new Error('请输入密码'));
       }
       callback();
+    };
+    var validateCode = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入验证码'));
+      } else {
+        callback();
+      }
     };
     return {
       codeUrl: '',
@@ -161,7 +168,7 @@ export default {
             { required: true, trigger: 'blur', validator: validatePhone }
         ],
         code: [
-            { required: true, trigger: 'change', message: '请输入验证码' }
+            { required: true, trigger: 'change',validator: validateCode }
         ]
       },
       loading: false,
@@ -189,7 +196,7 @@ export default {
       getCodeImg().then(res => {
         this.captchaEnabled = res.captchaEnabled === undefined ? true : res.captchaEnabled
         if (this.captchaEnabled) {
-          this.codeUrl = 'data:image/gif;base64,' + <res className="img"></res>
+          this.codeUrl = 'data:image/gif;base64,' + res.img
           this.loginForm.uuid = res.uuid
         }
       })

@@ -325,7 +325,7 @@
 }
 
 .badge__position {
-  vertical-align: baseline;
+  vertical-align: baseline !important;
 
   .el-badge__content.is-fixed {
     top: 10px;
