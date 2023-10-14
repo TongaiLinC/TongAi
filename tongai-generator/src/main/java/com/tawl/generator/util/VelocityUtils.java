@@ -36,6 +36,9 @@ public class VelocityUtils
     /** 默认使用逻辑删除 */
     private static final String DEFAULT_TOMBSTONES = "1";
 
+    /** 默认无导入导出功能 */
+    private static final String DEFAULT_IS_IMPORT_AND_EXPORT = "0";
+
     /** 后端模版type */
     public static final Integer BACK_END = 0;
 
@@ -79,6 +82,7 @@ public class VelocityUtils
         velocityContext.put("dicts", getDicts(genTable));
         setMenuVelocityContext(velocityContext, genTable);
         setDataAuthVelocityContext(velocityContext, genTable);
+        setImportAndExportVelocityContext(velocityContext, genTable);
         if (GenConstants.TPL_TREE.equals(tplCategory))
         {
             setTreeVelocityContext(velocityContext, genTable);
@@ -88,6 +92,14 @@ public class VelocityUtils
             setSubVelocityContext(velocityContext, genTable);
         }
         return velocityContext;
+    }
+
+    public static void setImportAndExportVelocityContext(VelocityContext context, GenTable genTable)
+    {
+        String options = genTable.getOptions();
+        JSONObject paramsObj = JSON.parseObject(options);
+        String isImportAndExport = getIsImportAndExport(paramsObj);
+        context.put("isImportAndExport", isImportAndExport);
     }
 
     public static void setMenuVelocityContext(VelocityContext context, GenTable genTable)
@@ -338,6 +350,22 @@ public class VelocityUtils
     public static String getPermissionPrefix(String moduleName, String businessName)
     {
         return StringUtils.format("{}:{}", moduleName, businessName);
+    }
+
+    /**
+     * 获取是否开启导入导出字段
+     *
+     * @param paramsObj 生成其他选项
+     * @return 是否开启导入导出字段
+     */
+    public static String getIsImportAndExport(JSONObject paramsObj)
+    {
+        if (StringUtils.isNotEmpty(paramsObj) && paramsObj.containsKey(GenConstants.IS_IMPORT_AND_EXPORT)
+                && StringUtils.isNotEmpty(paramsObj.getString(GenConstants.IS_IMPORT_AND_EXPORT)))
+        {
+            return paramsObj.getString(GenConstants.IS_IMPORT_AND_EXPORT);
+        }
+        return DEFAULT_IS_IMPORT_AND_EXPORT;
     }
 
     /**

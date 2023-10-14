@@ -107,6 +107,13 @@ public class GenTable extends BaseEntity
     /** 逻辑删除 0-否，1-是 */
     private String tombstones;
 
+    /** 导入导出 0-否，1-仅导出 2-仅导入 3-导入和导出*/
+    private String isImportAndExport;
+
+    public void setIsImportAndExport(String isImportAndExport) {
+        this.isImportAndExport = isImportAndExport;
+    }
+
     public void setTombstones(String tombstones) {
         this.tombstones = tombstones;
     }

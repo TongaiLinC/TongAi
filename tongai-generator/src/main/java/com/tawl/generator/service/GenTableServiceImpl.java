@@ -460,6 +460,7 @@ public class GenTableServiceImpl implements IGenTableService {
             String dataAuth = paramsObj.getString(GenConstants.DATA_AUTH);
             String frontTemplate = paramsObj.getString(GenConstants.FRONT_TEMPLATE);
             String tombstones = paramsObj.getString(GenConstants.TOMBSTONES);
+            String isImportAndExport = paramsObj.getString(GenConstants.IS_IMPORT_AND_EXPORT);
 
             genTable.setTreeCode(treeCode);
             genTable.setTreeParentCode(treeParentCode);
@@ -469,6 +470,7 @@ public class GenTableServiceImpl implements IGenTableService {
             genTable.setDataAuth(dataAuth);
             genTable.setFrontTemplate(frontTemplate);
             genTable.setTombstones(tombstones);
+            genTable.setIsImportAndExport(isImportAndExport);
         }
     }
 

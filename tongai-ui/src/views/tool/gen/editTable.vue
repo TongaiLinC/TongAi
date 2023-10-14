@@ -196,7 +196,8 @@ export default {
             parentMenuId: genTable.parentMenuId,
             dataAuth: genTable.dataAuth,
             frontTemplate: genTable.frontTemplate,
-            tombstones: genTable.tombstones
+            tombstones: genTable.tombstones,
+            isImportAndExport: genTable.isImportAndExport
           }
           updateGenTable(genTable).then(res => {
             this.$modal.notifySuccess(res.msg)
@@ -228,6 +229,9 @@ export default {
       }
       if (!this.info.tombstones) {
         this.info.tombstones = '1'
+      }
+      if (!this.info.isImportAndExport) {
+        this.info.isImportAndExport = '0'
       }
     }
   },

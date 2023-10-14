@@ -43,6 +43,9 @@ public class GenConstants
     /** 逻辑删除 0-否，1-是 */
     public static final String TOMBSTONES = "tombstones";
 
+    /** 导入导出 0-否，1-仅导出 2-仅导入 3-导入和导出*/
+    public static final String IS_IMPORT_AND_EXPORT = "isImportAndExport";
+
     /** 数据库字符串类型 */
     public static final String[] COLUMNTYPE_STR = { "char", "varchar", "nvarchar", "varchar2" };
 

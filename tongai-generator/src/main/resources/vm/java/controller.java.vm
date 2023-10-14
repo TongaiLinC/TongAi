@@ -58,19 +58,6 @@ public class ${ClassName}Controller extends BaseController
 #end
 
     /**
-     * 导出${functionName}列表
-     */
-    @PreAuthorize("@ss.hasPermi('${permissionPrefix}:export')")
-    @Log(title = "${functionName}", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, ${ClassName} ${className})
-    {
-        List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
-        ExcelUtil<${ClassName}> util = new ExcelUtil<${ClassName}>(${ClassName}.class);
-        util.exportExcel(response, list, "${functionName}数据");
-    }
-
-    /**
      * 获取${functionName}详细信息
      */
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:query')")
@@ -112,4 +99,46 @@ public class ${ClassName}Controller extends BaseController
     {
         return toAjax(${className}Service.delete${ClassName}By${pkColumn.capJavaField}s(${pkColumn.javaField}s));
     }
+
+#if(${isImportAndExport} == '2' || ${isImportAndExport} == '3')
+    /**
+     * 导出${functionName}列表
+     */
+    @PreAuthorize("@ss.hasPermi('${permissionPrefix}:export')")
+    @Log(title = "${functionName}", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    public void export(HttpServletResponse response, ${ClassName} ${className})
+    {
+        List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
+        ExcelUtil<${ClassName}> util = new ExcelUtil<${ClassName}>(${ClassName}.class);
+        util.exportExcel(response, list, "${functionName}数据");
+    }
+#end
+#if(${isImportAndExport} == '1' || ${isImportAndExport} == '3')
+    /**
+     * 导入${functionName}列表
+     */
+    @Log(title = "${functionName}", businessType = BusinessType.IMPORT)
+    @PreAuthorize("@ss.hasPermi('${permissionPrefix}:import')")
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    {
+        ExcelUtil<${ClassName}> util = new ExcelUtil<${ClassName}>(${ClassName}.class);
+        List<${ClassName}> ${className}List = util.importExcel(file.getInputStream());
+        String operName = getUsername();
+        String message = ${className}Service.import${ClassName}(${className}List, updateSupport, operName);
+        return success(message);
+    }
+
+    /**
+    * 下载导入模板
+    * @param response 请求结果
+    */
+    @PostMapping("/importTemplate")
+    public void importTemplate(HttpServletResponse response)
+    {
+        ExcelUtil<${ClassName}> util = new ExcelUtil<${ClassName}>(${ClassName}.class);
+        util.importTemplateExcel(response, "${functionName}导入模板");
+    }
+#end
 }

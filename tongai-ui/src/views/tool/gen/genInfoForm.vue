@@ -125,6 +125,23 @@
       </el-col>
 
       <el-col :span="12">
+        <el-form-item>
+          <span slot="label">
+            导入导出
+            <el-tooltip content="是否生成导入导出的基础代码" placement="top">
+              <i class="el-icon-question"></i>
+            </el-tooltip>
+          </span>
+          <el-radio-group v-model="info.isImportAndExport">
+            <el-radio label="0" border>无</el-radio>
+            <el-radio label="1" border>仅导入</el-radio>
+            <el-radio label="2" border>仅导出</el-radio>
+            <el-radio label="3" border>导入和导出</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-col>
+
+      <el-col :span="12">
         <el-form-item prop="genType">
           <span slot="label">
             生成代码方式
