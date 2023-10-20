@@ -66,6 +66,14 @@ cloud:
     region: ap-guangzhou
     #  短信过期时间（默认 5 分钟,阿里云验证码短信为固定值）
     expireTime: 5
+  # 对象存储配置
+  cos:
+    # 存储桶名称
+    bucketName: example
+    # 存储桶地域信息(阿里云中的Endpoint中的地区)
+    bucketRegion: hangzhou
+    # 阿里云存储桶地址前缀（阿里云OSS）
+    bucketEndpoint: oss-cn-hangzhou.aliyuncs.com
 
 # Spring配置
 spring:
