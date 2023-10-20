@@ -10,6 +10,12 @@ import lombok.Getter;
 public class SmsSendBody {
 
     /**
+     * 云服务平台信息
+     * 腾讯云：tx  阿里云: al  七牛云：qn
+     */
+    private String platform;
+
+    /**
      * 应用ID（腾讯云短信使用）
      */
     private String sdkAppId;
@@ -74,5 +80,9 @@ public class SmsSendBody {
 
     public void setParam(JSONObject param) {
         this.param = param;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
 }
