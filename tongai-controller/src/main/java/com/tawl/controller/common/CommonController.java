@@ -3,10 +3,14 @@ package com.tawl.controller.common;
 import com.tawl.common.config.TongAiConfig;
 import com.tawl.common.constant.Constants;
 import com.tawl.common.core.domain.AjaxResult;
+import com.tawl.common.utils.DateUtils;
+import com.tawl.common.utils.SecurityUtils;
 import com.tawl.common.utils.StringUtils;
+import com.tawl.common.utils.cloud.CloudUtils;
 import com.tawl.common.utils.file.FileUploadUtils;
 import com.tawl.common.utils.file.FileUtils;
 import com.tawl.framework.config.ServerConfig;
+import com.tawl.system.service.ISysConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +39,9 @@ public class CommonController
 
     @Autowired
     private ServerConfig serverConfig;
+
+    @Autowired
+    private ISysConfigService  sysConfigService;
 
     private static final String FILE_DELIMETER = ",";
 
@@ -76,24 +83,26 @@ public class CommonController
     @PostMapping("/upload")
     public AjaxResult uploadFile(MultipartFile file) throws Exception
     {
-        try
-        {
+        String cloudStorageEnabled = sysConfigService.selectConfigByKey("sys.cloud.storageEnabled");
+        String url = "";
+        String fileName = file.getOriginalFilename();
+        AjaxResult ajax = AjaxResult.success();
+        // 是否开启云存储
+        if (cloudStorageEnabled.equals("true")) {
+            String filePath = SecurityUtils.getUsername() + "/" + DateUtils.getDate() + "/" + fileName;
+            url = CloudUtils.uploadFile(file.getInputStream(), filePath);
+        } else {
             // 上传文件路径
             String filePath = TongAiConfig.getUploadPath();
             // 上传并返回新文件名称
-            String fileName = FileUploadUtils.upload(filePath, file);
-            String url = serverConfig.getUrl() + fileName;
-            AjaxResult ajax = AjaxResult.success();
-            ajax.put("url", url);
+            fileName = FileUploadUtils.upload(filePath, file);
+            url = serverConfig.getUrl() + fileName;
             ajax.put("fileName", fileName);
             ajax.put("newFileName", FileUtils.getName(fileName));
-            ajax.put("originalFilename", file.getOriginalFilename());
-            return ajax;
         }
-        catch (Exception e)
-        {
-            return AjaxResult.error(e.getMessage());
-        }
+        ajax.put("url", url);
+        ajax.put("originalFilename",fileName);
+        return ajax;
     }
 
     /**
