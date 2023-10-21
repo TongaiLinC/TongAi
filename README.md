@@ -15,7 +15,7 @@
 * 高效率开发，使用代码生成器可以一键生成前后端代码。
 
 **在线体验**
-- 演示地址(未上线)：[http://admin.tongai.vip(opens new window)](http://admin.tongai.vip/)
+- 演示地址：[http://admin.tongai.vip(opens new window)](http://admin.tongai.vip/)
 - 代码下载：[https://gitee.com/tongailinc/TongAi.git(opens new window)](https://gitee.com/tongailinc/TongAi.git)
 - 文档地址：[https://docs.tongai.vip(opens new window)](https://docs.tongai.vip)
 
