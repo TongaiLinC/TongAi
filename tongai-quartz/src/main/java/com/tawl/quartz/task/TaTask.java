@@ -21,7 +21,7 @@ public class TaTask {
      * 通过接口清除所有用户日志
      */
     public void clearAllLog(Integer day) {
-        sysOperLogService.cleanOperLog();
+        sysOperLogService.cleanOperLog(day);
         System.out.println("=========定时任务执行了,日志清除成功==========");
         System.out.println(StringUtils.format("============当前日志保留天数：{}天============", day));
         System.out.println("==========================================");

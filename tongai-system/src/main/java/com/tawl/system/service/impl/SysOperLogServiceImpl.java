@@ -70,8 +70,8 @@ public class SysOperLogServiceImpl implements ISysOperLogService
      * 清空操作日志
      */
     @Override
-    public void cleanOperLog()
+    public void cleanOperLog(Integer days)
     {
-        operLogMapper.cleanOperLog();
+        operLogMapper.cleanOperLog(days);
     }
 }

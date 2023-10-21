@@ -78,7 +78,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<update id="cleanOperLog">
-        truncate table sys_oper_log
+        delete from sys_oper_log
+		<if test="days != null and days != ''">
+			where oper_time &lt; DATE_SUB(NOW(), INTERVAL #{days} DAY);
+		</if>
     </update>
 
 </mapper> 
