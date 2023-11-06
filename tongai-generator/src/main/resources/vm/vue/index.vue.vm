@@ -100,6 +100,7 @@
           v-hasPermi="['${moduleName}:${businessName}:remove']"
         >删除</el-button>
       </el-col>
+#if(${isImportAndExport} == '2' || ${isImportAndExport} == '3')
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -110,6 +111,7 @@
           v-hasPermi="['${moduleName}:${businessName}:export']"
         >导出</el-button>
       </el-col>
+#end
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -385,7 +387,7 @@
 </template>
 
 <script>
-  import {get${BusinessName}, list${BusinessName}} from "@/api/";
+  import { list${BusinessName}, get${BusinessName}, del${BusinessName}, add${BusinessName}, update${BusinessName} } from "@/api/${moduleName}/${businessName}";
 
   export default {
   name: "${BusinessName}",
