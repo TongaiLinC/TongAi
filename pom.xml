@@ -23,8 +23,8 @@
         <knife4j.version>4.0.0</knife4j.version>
         <kaptcha.version>2.3.3</kaptcha.version>
         <pagehelper.boot.version>1.4.6</pagehelper.boot.version>
-        <fastjson.version>2.0.39</fastjson.version>
-        <oshi.version>6.4.4</oshi.version>
+        <fastjson.version>2.0.41</fastjson.version>
+        <oshi.version>6.4.6</oshi.version>
         <commons.io.version>2.13.0</commons.io.version>
         <commons.collections4.version>4.4</commons.collections4.version>
         <poi.version>5.2.3</poi.version>
