@@ -13,6 +13,7 @@
       :headers="headers"
       class="upload-file-uploader"
       ref="fileUpload"
+      :data="fileInfo"
     >
       <!-- 上传按钮 -->
       <el-button size="mini" type="primary">选取文件</el-button>
@@ -78,6 +79,11 @@ export default {
         Authorization: "Bearer " + getToken(),
       },
       fileList: [],
+      fileInfo: {
+        fileName: "",
+        fileSize: "",
+        fileType: "",
+      }
     };
   },
   watch: {
@@ -122,6 +128,8 @@ export default {
           this.$modal.notifyError(`文件格式不正确, 请上传${this.fileType.join("/")}格式文件!`);
           return false;
         }
+        this.fileInfo.fileName = fileName;
+        this.fileInfo.fileType = fileExt;
       }
       // 校检文件大小
       if (this.fileSize) {
@@ -130,6 +138,7 @@ export default {
           this.$modal.notifyError(`上传文件大小不能超过 ${this.fileSize} MB!`);
           return false;
         }
+        this.fileInfo.fileSize = file.size;
       }
       this.$modal.loading("正在上传文件，请稍候...");
       this.number++;

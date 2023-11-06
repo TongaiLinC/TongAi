@@ -1,11 +1,12 @@
-import {getInfo, login, logout} from '@/api/login'
-import {getToken, removeToken, setToken} from '@/utils/auth'
-import {getUnReadCount} from '@/api/system/notice'
-import {Notification} from 'element-ui'
+import { getInfo, login, logout } from '@/api/login'
+import { getToken, removeToken, setToken } from '@/utils/auth'
+import { getUnReadCount } from '@/api/system/notice'
+import { Notification } from 'element-ui'
 
 const user = {
   state: {
     token: getToken(),
+    id: '',
     name: '',
     nickName: '',
     avatar: '',
@@ -17,6 +18,9 @@ const user = {
   mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token
+    },
+    SET_ID: (state, id) => {
+      state.id = id
     },
     SET_NAME: (state, name) => {
       state.name = name
@@ -63,7 +67,7 @@ const user = {
               }
               commit('SET_UNREAD_COUNT', res)
             })
-          },800)
+          }, 800)
           commit('SET_TOKEN', res.token)
           resolve()
         }).catch(error => {
@@ -84,6 +88,7 @@ const user = {
           } else {
             commit('SET_ROLES', ['ROLE_DEFAULT'])
           }
+          commit('SET_ID', user.userId)
           commit('SET_NAME', user.userName)
           commit('SET_NICK_NAME', user.nickName)
           commit('SET_AVATAR', avatar)

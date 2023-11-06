@@ -150,8 +150,8 @@ export default {
       disable: false,
       activeName: 'userAccount',
       loginForm: {
-        username: '',
-        password: '',
+        username: 'admin',
+        password: 'admin123',
         phone: '',
         rememberMe: false,
         code: '',
