@@ -230,6 +230,9 @@ export default {
       if (!this.info.tombstones) {
         this.info.tombstones = '1'
       }
+      if (!this.info.frontTemplate) {
+        this.info.frontTemplate = '2'
+      }
       if (!this.info.isImportAndExport) {
         this.info.isImportAndExport = '0'
       }

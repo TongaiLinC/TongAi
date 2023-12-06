@@ -121,7 +121,7 @@ export default {
     handleBeforeUpload(file) {
       // 校检文件类型
       if (this.fileType) {
-        const fileName = file.name.split('.');
+        const fileName = file.name.split('.')[0];
         const fileExt = fileName[fileName.length - 1];
         const isTypeOk = this.fileType.indexOf(fileExt) >= 0;
         if (!isTypeOk) {
