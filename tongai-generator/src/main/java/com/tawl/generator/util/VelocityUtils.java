@@ -36,6 +36,9 @@ public class VelocityUtils
     /** 默认使用逻辑删除 */
     private static final String DEFAULT_TOMBSTONES = "1";
 
+    /** 默认生成前端页面和API */
+    private static final String DEFAULT_FRONT = "2";
+
     /** 默认无导入导出功能 */
     private static final String DEFAULT_IS_IMPORT_AND_EXPORT = "0";
 
@@ -82,6 +85,7 @@ public class VelocityUtils
         velocityContext.put("dicts", getDicts(genTable));
         setMenuVelocityContext(velocityContext, genTable);
         setDataAuthVelocityContext(velocityContext, genTable);
+        setFrontVelocityContext(velocityContext, genTable);
         setImportAndExportVelocityContext(velocityContext, genTable);
         if (GenConstants.TPL_TREE.equals(tplCategory))
         {
@@ -118,6 +122,14 @@ public class VelocityUtils
         String tombstones = getTombstones(paramsObj);
         context.put("dataAuth", dataAuth);
         context.put("tombstones", tombstones);
+    }
+
+    public static void setFrontVelocityContext(VelocityContext context, GenTable genTable)
+    {
+        String options = genTable.getOptions();
+        JSONObject paramsObj = JSON.parseObject(options);
+        String frontTemplate = getTombstones(paramsObj);
+        context.put("frontTemplate", frontTemplate);
     }
 
     public static void setTreeVelocityContext(VelocityContext context, GenTable genTable)
@@ -398,6 +410,22 @@ public class VelocityUtils
             return paramsObj.getString(GenConstants.DATA_AUTH);
         }
         return DEFAULT_DATA_AUTH;
+    }
+
+    /**
+     * 获取前端生成配置
+     *
+     * @param paramsObj 生成其他选项
+     * @return 前端生成选项
+     */
+    public static String getFront(JSONObject paramsObj)
+    {
+        if (StringUtils.isNotEmpty(paramsObj) && paramsObj.containsKey(GenConstants.FRONT_TEMPLATE)
+                && StringUtils.isNotEmpty(paramsObj.getString(GenConstants.FRONT_TEMPLATE)))
+        {
+            return paramsObj.getString(GenConstants.FRONT_TEMPLATE);
+        }
+        return DEFAULT_FRONT;
     }
 
     /**
