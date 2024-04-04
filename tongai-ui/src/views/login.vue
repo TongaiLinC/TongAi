@@ -41,7 +41,7 @@
           </el-form-item>
           <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
         </el-tab-pane>
-        <el-tab-pane label="手机登录" name="userPhone">
+        <el-tab-pane label="手机登录" name="userPhone" v-if="smsCodeEnabled">
           <el-form-item prop="phone">
             <el-input
                 v-model="loginForm.phone"
@@ -174,6 +174,7 @@ export default {
       loading: false,
       // 验证码开关
       captchaEnabled: true,
+      smsCodeEnabled: true,
       // 注册开关
       register: false,
       redirect: undefined
@@ -195,6 +196,7 @@ export default {
     getCode() {
       getCodeImg().then(res => {
         this.captchaEnabled = res.captchaEnabled === undefined ? true : res.captchaEnabled
+        this.smsCodeEnabled = res.smsCodeEnabled === undefined ? true : res.smsCodeEnabled
         if (this.captchaEnabled) {
           this.codeUrl = 'data:image/gif;base64,' + res.img
           this.loginForm.uuid = res.uuid
