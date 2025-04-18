@@ -1,5 +1,7 @@
 package com.tawl.system.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.tawl.common.annotation.Excel;
 import com.tawl.common.core.domain.BaseEntity;
 import lombok.Data;
@@ -23,6 +25,7 @@ public class SysFileInfo extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 标签ID */
+    @TableId
     private Long fileId;
 
     /** 文件名称 */
@@ -37,9 +40,19 @@ public class SysFileInfo extends BaseEntity
     @Excel(name = "文件类别")
     private String fileType;
 
+    /** 文件MIME类别 */
+    @Excel(name = "文件MIME类别")
+    private String MimeType;
+
     /** 文件大小 */
     @Excel(name = "文件大小")
     private BigDecimal fileSize;
+
+    /** 文件唯一标识(MD5) */
+    private String identifier;
+
+    /** 文件状态：是否上传完成（0：未完成，1：已完成)） */
+    private Boolean complete;
 
     /** 数据所属人ID */
     private Long userId;
@@ -48,6 +61,7 @@ public class SysFileInfo extends BaseEntity
     private Long deptId;
 
     /** 文件 */
+    @TableField(exist = false)
     private MultipartFile file;
 
 }

@@ -27,6 +27,8 @@ import RightToolbar from "@/components/RightToolbar"
 import Editor from "@/components/Editor"
 // 文件上传组件
 import FileUpload from "@/components/FileUpload"
+// 上传文件分块上传组件
+import FileUploadChunk from "@/components/FileUploadChunk"
 // 图片上传组件
 import ImageUpload from "@/components/ImageUpload"
 // 图片预览组件
@@ -59,6 +61,7 @@ Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)
 Vue.component('Editor', Editor)
 Vue.component('FileUpload', FileUpload)
+Vue.component('FileUploadChunk', FileUploadChunk)
 Vue.component('ImageUpload', ImageUpload)
 Vue.component('ImagePreview', ImagePreview)
 

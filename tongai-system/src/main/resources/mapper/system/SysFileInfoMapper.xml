@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tawl.system.mapper.SysFileInfoMapper">
 
     <resultMap type="SysFileInfo" id="SysFileInfoResult">
         <result property="fileId"    column="file_id"    />
+        <result property="identifier"    column="identifier"    />
         <result property="fileName"    column="file_name"    />
         <result property="filePath"    column="file_path"    />
         <result property="fileType"    column="file_type"    />
+        <result property="mimeType"    column="mime_type"    />
         <result property="fileSize"    column="file_size"    />
+        <result property="complete"    column="complete"    />
         <result property="userId"    column="user_id"    />
         <result property="deptId"    column="dept_id"    />
         <result property="delFlag"    column="del_flag"    />
@@ -21,7 +24,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectSysFileInfoVo">
-        select a.file_id, a.file_name, a.file_path, a.file_type, a.file_size, a.user_id, a.dept_id, a.del_flag, a.create_by, a.create_time, a.update_by, a.update_time, a.remark from
+        select a.file_id, a.identifier, a.file_name, a.file_path, a.file_type, a.mime_type, a.file_size, a.complete,
+               a.user_id, a.dept_id, a.del_flag, a.create_by, a.create_time, a.update_by, a.update_time, a.remark from
             sys_file_info a left join sys_dept d on a.dept_id = d.dept_id left join sys_user u on a.user_id = u.user_id
     </sql>
 
@@ -29,9 +33,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSysFileInfoVo"/>
         <where>
             and a.del_flag = '0'
-            <if test="fileId != null  and fileId != ''"> and a.file_id = #{fileId}</if>
+            <if test="identifier != null  and identifier != ''"> and a.identifier = #{identifier}</if>
             <if test="fileName != null  and fileName != ''"> and a.file_name like concat('%', #{fileName}, '%')</if>
             <if test="fileType != null  and fileType != ''"> and a.file_type = #{fileType}</if>
+            <if test="fileSize != null "> and a.file_size = #{fileSize}</if>
+            <if test="complete != null "> and a.complete = #{complete}</if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
@@ -42,13 +48,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where a.file_id = #{fileId}
     </select>
 
+    <select id="selectSysFileInfoByIdentifier" parameterType="String" resultMap="SysFileInfoResult">
+        <include refid="selectSysFileInfoVo"/>
+        where a.identifier = #{identifier} and a.del_flag = '0'
+    </select>
+
     <insert id="insertSysFileInfo" parameterType="SysFileInfo" useGeneratedKeys="true" keyProperty="fileId">
         insert into sys_file_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="identifier != null">identifier,</if>
             <if test="fileName != null">file_name,</if>
             <if test="filePath != null">file_path,</if>
             <if test="fileType != null">file_type,</if>
+            <if test="mimeType != null">mime_type,</if>
             <if test="fileSize != null">file_size,</if>
+            <if test="complete != null">complete,</if>
             <if test="userId != null">user_id,</if>
             <if test="deptId != null">dept_id,</if>
             <if test="delFlag != null">del_flag,</if>
@@ -57,12 +71,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="identifier != null">#{identifier},</if>
             <if test="fileName != null">#{fileName},</if>
             <if test="filePath != null">#{filePath},</if>
             <if test="fileType != null">#{fileType},</if>
+            <if test="mimeType != null">#{mimeType},</if>
             <if test="fileSize != null">#{fileSize},</if>
+            <if test="complete != null">#{complete},</if>
             <if test="userId != null">#{userId},</if>
             <if test="deptId != null">#{deptId},</if>
             <if test="delFlag != null">#{delFlag},</if>
@@ -71,16 +88,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateSysFileInfo" parameterType="SysFileInfo">
         update sys_file_info
         <trim prefix="SET" suffixOverrides=",">
+            <if test="identifier != null">identifier = #{identifier},</if>
             <if test="fileName != null">file_name = #{fileName},</if>
             <if test="filePath != null">file_path = #{filePath},</if>
             <if test="fileType != null">file_type = #{fileType},</if>
+            <if test="mimeType != null">mime_type = #{mimeType},</if>
             <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="complete != null">complete = #{complete},</if>
             <if test="userId != null">user_id = #{userId},</if>
             <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>

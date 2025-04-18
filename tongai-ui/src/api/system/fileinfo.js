@@ -42,3 +42,48 @@ export function delFileinfo(fileId) {
     method: 'delete'
   })
 }
+
+// 分片上传文件管理
+export function checkFile(data) {
+  return request({
+    url: '/common/checkFile',
+    method: 'post',
+    data: data
+  })
+}
+
+// 分片上传文件管理
+export function upload(data, onUploadProgress) {
+  const config = {}
+
+  if (onUploadProgress) {
+    config.onUploadProgress = onUploadProgress
+  }
+  return request({
+    url: '/common/upload',
+    method: 'post',
+    data: data,
+    ...config
+  })
+}
+
+// 分片上传文件管理
+export function uploadChunk(data) {
+  return request({
+    url: '/common/uploadChunk',
+    method: 'post',
+    headers: {
+      repeatSubmit: false
+    },
+    data: data
+  })
+}
+
+// 合并分片上传文件管理
+export function mergeChunks(data) {
+  return request({
+    url: '/common/mergeChunks',
+    method: 'post',
+    data: data
+  })
+}

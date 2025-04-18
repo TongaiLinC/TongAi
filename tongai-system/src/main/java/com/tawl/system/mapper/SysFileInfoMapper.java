@@ -60,4 +60,12 @@ public interface SysFileInfoMapper extends BaseMapper<SysFileInfo>
      * @return 结果
      */
     public int deleteSysFileInfoByFileIds(Long[] fileIds);
+
+    /**
+     * 通过唯一标识查询文件信息
+     *
+     * @param identifier 文件信息唯一标识
+     * @return 文件信息
+     */
+    public SysFileInfo selectSysFileInfoByIdentifier(String identifier);
 }
