@@ -11,7 +11,7 @@ tongai:
   # 文件路径 示例（ Windows配置D:/tongai/uploadPath，Linux配置 /home/tongai/uploadPath，MAC配置：/Users/mac/Desktop/tongai/uploadPath）
   profile: D:/tongai/uploadPath
   # 获取ip地址开关
-  addressEnabled: false
+  addressEnabled: true
   # 验证码类型 math 数字计算 char 字符验证
   captchaType: math
 
@@ -129,6 +129,12 @@ token:
 
 # MyBatis Plus配置
 mybatis-plus:
+  global-config:
+    db-config:
+      # 设置动态代理方式为CGLIB
+      proxy-type: CGLIB
+  # 启用懒加载模式
+  lazy-initialization: true
   # 搜索指定包别名
   typeAliasesPackage: com.tawl.**.domain
   # 配置mapper的扫描，找到所有的mapper.xml映射文件
