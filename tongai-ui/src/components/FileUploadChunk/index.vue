@@ -86,20 +86,20 @@ export default {
       type: Array,
       default: () => ['doc', 'xls', 'docx', 'xlsx', 'ppt', 'txt', 'pdf', 'jpg', 'jpeg', 'png','mp4']
     },
-    // 文件大小
+    // 文件大小限制
     fileSize: {
       type: Number,
-      default: 50
+      default: 200
     },
-    // 分片大小 默认2M
+    // 分片大小限制 默认2M
     chunkSize: {
       type: Number,
       default: 2
     },
-    // 文件分片大小 默认10M
+    // 文件分片大小限制 默认>50M分片
     fileChunkSize: {
       type: Number,
-      default: 10
+      default: 50
     }
   },
   data() {
@@ -147,7 +147,7 @@ export default {
       this.uploadStatus = null
       this.uploadResult = null
 
-      this.$modal.loading('正在上传文件，请稍候...')
+      // this.$modal.loading('正在上传文件，请稍候...')
       return true
     },
     // 文件个数超出
@@ -258,7 +258,7 @@ export default {
           this.emitChangeEvent(this.uploadResult)
         }
         this.$emit('getPath')
-        this.$modal.closeLoading()
+        // this.$modal.closeLoading()
         this.uploading = false
       }
     },
