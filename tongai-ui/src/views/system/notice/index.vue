@@ -201,10 +201,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="通知人员">
+            <el-form-item label="通知人员" v-if="form.noticeType !== '4'">
               <el-select v-model="form.userIds" multiple filterable clearable collapse-tags
-                         placeholder="请选择通知对象"
-              >
+                         placeholder="请选择通知对象">
                 <el-option v-for="user in userList" :key="user.userId" :label="user.nickName" :value="user.userId">
                 </el-option>
               </el-select>
