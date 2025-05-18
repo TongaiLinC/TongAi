@@ -90,7 +90,7 @@
 
     <!-- 上传文件对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="450px" append-to-body>
-      <file-upload-chunk v-if="open" v-model="filePath" :chunkSize="1" :fileChunkSize="3"/>
+      <file-upload-chunk v-if="open" v-model="filePath"/>
     </el-dialog>
 
     <!-- 文件预览对话框 -->
