@@ -119,7 +119,7 @@
     <!-- 查看通知详情 -->
     <el-dialog
       center
-      width="25vw"
+      width="35vw"
       :title="form.noticeTitle"
       :visible.sync="centerDialogVisible"
       :close-on-click-modal="false"
