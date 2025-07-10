@@ -6,8 +6,8 @@ import com.tawl.common.utils.StringUtils;
 import lombok.Getter;
 import org.apache.commons.lang3.ArrayUtils;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 
 /**
@@ -93,7 +93,7 @@ public class GenTable extends BaseEntity
     private String treeName;
 
     /** 上级菜单ID字段 */
-    private String parentMenuId;
+    private Long parentMenuId;
 
     /** 上级菜单名称字段 */
     private String parentMenuName;
@@ -230,7 +230,7 @@ public class GenTable extends BaseEntity
         this.treeName = treeName;
     }
 
-    public void setParentMenuId(String parentMenuId)
+    public void setParentMenuId(Long parentMenuId)
     {
         this.parentMenuId = parentMenuId;
     }

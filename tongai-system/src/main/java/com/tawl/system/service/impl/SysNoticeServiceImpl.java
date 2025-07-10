@@ -108,8 +108,12 @@ public class SysNoticeServiceImpl implements ISysNoticeService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public int updateNotice(SysNotice notice) {
+        notice.setUpdateBy(SecurityUtils.getUsername());
+        if (NoticeStatus.PUBLISH.getValue().equals(notice.getStatus())){
+            notice.setPublishUser(SecurityUtils.getLoginUser().getUser().getNickName());
+        }
         int updateNotice = noticeMapper.updateNotice(notice);
-        if (NoticeStatus.NO_PUBLISH.toString().equals(notice.getStatus())) {
+        if (NoticeStatus.NO_PUBLISH.getValue().equals(notice.getStatus())) {
             return updateNotice;
         }
         if (updateNotice != 0 && !SysNotice.DEFAULT_USER_IDS.equals(notice.getUserIds())) {

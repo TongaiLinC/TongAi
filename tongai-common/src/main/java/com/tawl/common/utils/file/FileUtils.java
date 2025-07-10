@@ -1,16 +1,17 @@
 package com.tawl.common.utils.file;
 
 import com.tawl.common.config.TongAiConfig;
+import com.tawl.common.constant.Constants;
 import com.tawl.common.utils.DateUtils;
 import com.tawl.common.utils.StringUtils;
 import com.tawl.common.utils.uuid.IdUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -83,6 +84,17 @@ public class FileUtils {
       IOUtils.close(fos);
     }
     return FileUploadUtils.getPathFileName(uploadDir, pathName);
+  }
+
+  /**
+   * 移除路径中的请求前缀片段
+   *
+   * @param filePath 文件路径
+   * @return 移除后的文件路径
+   */
+  public static String stripPrefix(String filePath)
+  {
+    return StringUtils.substringAfter(filePath, Constants.RESOURCE_PREFIX);
   }
 
   /**

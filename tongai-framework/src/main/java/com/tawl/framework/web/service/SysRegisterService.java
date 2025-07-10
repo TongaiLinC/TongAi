@@ -8,6 +8,7 @@ import com.tawl.common.core.domain.model.RegisterBody;
 import com.tawl.common.core.redis.RedisCache;
 import com.tawl.common.exception.user.CaptchaException;
 import com.tawl.common.exception.user.CaptchaExpireException;
+import com.tawl.common.utils.DateUtils;
 import com.tawl.common.utils.MessageUtils;
 import com.tawl.common.utils.SecurityUtils;
 import com.tawl.common.utils.StringUtils;
@@ -76,6 +77,7 @@ public class SysRegisterService
         else
         {
             sysUser.setNickName(username);
+            sysUser.setPwdUpdateDate(DateUtils.getNowDate());
             sysUser.setPassword(SecurityUtils.encryptPassword(password));
             boolean regFlag = userService.registerUser(sysUser);
             if (!regFlag)

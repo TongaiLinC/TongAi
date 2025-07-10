@@ -86,7 +86,21 @@ export const constantRoutes = [
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
-  }
+  },
+  {
+    path: '/notice-read',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'read',
+        component: () => import('@/views/system/notice/read'),
+        name: 'NoticeRead',
+        meta: { title: '消息中心', icon: 'message' }
+      }
+    ]
+  },
 ]
 
 // 动态路由，基于用户权限动态去加载
@@ -164,8 +178,8 @@ export const dynamicRoutes = [
 ]
 
 // 防止连续点击多次路由报错
-let routerPush = Router.prototype.push;
-let routerReplace = Router.prototype.replace;
+let routerPush = Router.prototype.push
+let routerReplace = Router.prototype.replace
 // push
 Router.prototype.push = function push(location) {
   return routerPush.call(this, location).catch(err => err)

@@ -17,7 +17,6 @@ const install = function(Vue) {
 if (window.Vue) {
   window['hasRole'] = hasRole
   window['hasPermi'] = hasPermi
-  Vue.use(install); // eslint-disable-line
 }
 
 export default install

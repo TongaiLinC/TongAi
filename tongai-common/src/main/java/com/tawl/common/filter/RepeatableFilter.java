@@ -3,8 +3,8 @@ package com.tawl.common.filter;
 import com.tawl.common.utils.StringUtils;
 import org.springframework.http.MediaType;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**

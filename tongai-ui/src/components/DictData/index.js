@@ -8,7 +8,7 @@ function searchDictByKey(dict, key) {
     return null
   }
   try {
-    for (let i = 0; i < dict.length; i++) {
+    for (let i = 0 ;i < dict.length; i++) {
       if (dict[i].key == key) {
         return dict[i].value
       }

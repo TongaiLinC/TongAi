@@ -15,6 +15,7 @@ import com.tawl.system.domain.SysUserPost;
 import com.tawl.system.domain.SysUserRole;
 import com.tawl.system.mapper.*;
 import com.tawl.system.service.ISysConfigService;
+import com.tawl.system.service.ISysDeptService;
 import com.tawl.system.service.ISysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.validation.Validator;
+import jakarta.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,6 +47,9 @@ public class SysUserServiceImpl implements ISysUserService
 
     @Autowired
     private SysPostMapper postMapper;
+
+    @Autowired
+    private ISysDeptService deptService;
 
     @Autowired
     private SysUserRoleMapper userRoleMapper;
@@ -362,15 +366,15 @@ public class SysUserServiceImpl implements ISysUserService
 
     /**
      * 修改用户头像
-     * 
-     * @param userName 用户名
+     *
+     * @param userId 用户ID
      * @param avatar 头像地址
      * @return 结果
      */
     @Override
-    public boolean updateUserAvatar(String userName, String avatar)
+    public boolean updateUserAvatar(Long userId, String avatar)
     {
-        return userMapper.updateUserAvatar(userName, avatar) > 0;
+        return userMapper.updateUserAvatar(userId, avatar) > 0;
     }
 
     /**
@@ -387,17 +391,16 @@ public class SysUserServiceImpl implements ISysUserService
 
     /**
      * 重置用户密码
-     * 
-     * @param userName 用户名
+     *
+     * @param userId 用户ID
      * @param password 密码
      * @return 结果
      */
     @Override
-    public int resetUserPwd(String userName, String password)
+    public int resetUserPwd(Long userId, String password)
     {
-        return userMapper.resetUserPwd(userName, password);
+        return userMapper.resetUserPwd(userId, password);
     }
-
     /**
      * 新增用户角色信息
      * 
@@ -512,7 +515,6 @@ public class SysUserServiceImpl implements ISysUserService
         int failureNum = 0;
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
-        String password = configService.selectConfigByKey("sys.user.initPassword");
         for (SysUser user : userList)
         {
             try
@@ -522,6 +524,8 @@ public class SysUserServiceImpl implements ISysUserService
                 if (StringUtils.isNull(u))
                 {
                     BeanValidators.validateWithException(validator, user);
+                    deptService.checkDeptDataScope(user.getDeptId());
+                    String password = configService.selectConfigByKey("sys.user.initPassword");
                     user.setPassword(SecurityUtils.encryptPassword(password));
                     user.setCreateBy(operName);
                     userMapper.insertUser(user);
@@ -533,6 +537,7 @@ public class SysUserServiceImpl implements ISysUserService
                     BeanValidators.validateWithException(validator, user);
                     checkUserAllowed(u);
                     checkUserDataScope(u.getUserId());
+                    deptService.checkDeptDataScope(user.getDeptId());
                     user.setUserId(u.getUserId());
                     user.setUpdateBy(operName);
                     userMapper.updateUser(user);

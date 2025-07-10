@@ -2,10 +2,13 @@ package com.tawl.framework.aspectj;
 
 import com.alibaba.fastjson2.JSON;
 import com.tawl.common.annotation.Log;
+import com.tawl.common.core.domain.entity.SysUser;
 import com.tawl.common.core.domain.model.LoginUser;
+import com.tawl.common.core.text.Convert;
 import com.tawl.common.enums.BusinessStatus;
 import com.tawl.common.enums.HttpMethod;
 import com.tawl.common.filter.PropertyPreExcludeFilter;
+import com.tawl.common.utils.ExceptionUtil;
 import com.tawl.common.utils.SecurityUtils;
 import com.tawl.common.utils.ServletUtils;
 import com.tawl.common.utils.StringUtils;
@@ -13,6 +16,8 @@ import com.tawl.common.utils.ip.IpUtils;
 import com.tawl.framework.manager.AsyncManager;
 import com.tawl.framework.manager.factory.AsyncFactory;
 import com.tawl.system.domain.SysOperLog;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.ArrayUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -26,14 +31,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 import java.util.Map;
 
 /**
  * 操作日志记录处理
- * 
+ *
  * @author tongai
  */
 @Aspect
@@ -52,7 +55,7 @@ public class LogAspect
      * 处理请求前执行
      */
     @Before(value = "@annotation(controllerLog)")
-    public void boBefore(JoinPoint joinPoint, Log controllerLog)
+    public void doBefore(JoinPoint joinPoint, Log controllerLog)
     {
         TIME_THREADLOCAL.set(System.currentTimeMillis());
     }
@@ -70,7 +73,7 @@ public class LogAspect
 
     /**
      * 拦截异常操作
-     * 
+     *
      * @param joinPoint 切点
      * @param e 异常
      */
@@ -97,12 +100,17 @@ public class LogAspect
             if (loginUser != null)
             {
                 operLog.setOperName(loginUser.getUsername());
+                SysUser currentUser = loginUser.getUser();
+                if (StringUtils.isNotNull(currentUser) && StringUtils.isNotNull(currentUser.getDept()))
+                {
+                    operLog.setDeptName(currentUser.getDept().getDeptName());
+                }
             }
 
             if (e != null)
             {
                 operLog.setStatus(BusinessStatus.FAIL.ordinal());
-                operLog.setErrorMsg(StringUtils.substring(e.getMessage(), 0, 2000));
+                operLog.setErrorMsg(StringUtils.substring(Convert.toStr(e.getMessage(), ExceptionUtil.getExceptionMessage(e)), 0, 2000));
             }
             // 设置方法名称
             String className = joinPoint.getTarget().getClass().getName();
@@ -131,7 +139,7 @@ public class LogAspect
 
     /**
      * 获取注解中对方法的描述信息 用于Controller层注解
-     * 
+     *
      * @param log 日志
      * @param operLog 操作日志
      * @throws Exception
@@ -159,7 +167,7 @@ public class LogAspect
 
     /**
      * 获取请求的参数，放到log中
-     * 
+     *
      * @param operLog 操作日志
      * @throws Exception 异常
      */
@@ -167,8 +175,7 @@ public class LogAspect
     {
         Map<?, ?> paramsMap = ServletUtils.getParamMap(ServletUtils.getRequest());
         String requestMethod = operLog.getRequestMethod();
-        if (StringUtils.isEmpty(paramsMap)
-                && (HttpMethod.PUT.name().equals(requestMethod) || HttpMethod.POST.name().equals(requestMethod)))
+        if (StringUtils.isEmpty(paramsMap) && StringUtils.equalsAny(requestMethod, HttpMethod.PUT.name(), HttpMethod.POST.name(), HttpMethod.DELETE.name()))
         {
             String params = argsArrayToString(joinPoint.getArgs(), excludeParamNames);
             operLog.setOperParam(StringUtils.substring(params, 0, 2000));
@@ -215,7 +222,7 @@ public class LogAspect
 
     /**
      * 判断是否需要过滤的对象。
-     * 
+     *
      * @param o 对象信息。
      * @return 如果是需要过滤的对象，则返回true；否则返回false。
      */

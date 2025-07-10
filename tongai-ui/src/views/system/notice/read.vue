@@ -88,7 +88,7 @@
           <dict-tag :options="dict.type.sys_notice_read" :value="scope.row.isRead"/>
         </template>
       </el-table-column>
-      <el-table-column label="发布者" align="center" prop="createBy" width="150"/>
+      <el-table-column label="发布者" align="center" prop="publishUser" width="150"/>
       <el-table-column label="发布时间" align="center" prop="publishTime" width="200">
         <template slot-scope="scope">
           <span>{{ formatDateTime(scope.row.publishTime) }}</span>

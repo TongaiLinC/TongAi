@@ -24,7 +24,7 @@
             size="mini"
             @click="handleAdd"
             v-hasPermi="['takj:fileinfo:add']"
-        >新增
+        >上传文件
         </el-button>
       </el-col>
       <el-col :span="1.5">
@@ -94,10 +94,10 @@
     </el-dialog>
 
     <!-- 文件预览对话框 -->
-    <el-dialog :visible.sync="previewVisible" :width="previewType==='other'?'450px':'800px'" append-to-body>
-      <img v-if="previewType === 'image'" :src="previewUrl" style="width: 100%">
+    <el-dialog v-if="previewVisible" :visible.sync="previewVisible" :width="previewType==='other'?'450px':'800px'" append-to-body>
+      <img v-if="previewType === 'image'" :src="previewUrl" style="width: 100%;">
       <video v-else-if="previewType === 'video'" :src="previewUrl" controls style="width: 100%"></video>
-      <iFrame v-else-if="previewType === 'pdf'" :src="previewUrl"></iFrame>
+      <iFrame v-else-if="previewType === 'pdf'" :src="previewUrl" style="height: 80vh"></iFrame>
       <div v-else style="text-align: center">
         <p>不支持预览此文件类型</p>
         <el-button type="primary" @click="downloadFile">下载文件</el-button>

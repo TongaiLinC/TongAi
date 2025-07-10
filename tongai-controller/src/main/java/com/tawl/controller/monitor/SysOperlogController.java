@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -59,7 +59,7 @@ public class SysOperlogController extends BaseController
     @DeleteMapping("/clean")
     public AjaxResult clean()
     {
-        operLogService.cleanOperLog(null);
+        operLogService.cleanOperLog(7);
         return success();
     }
 }

@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import {parseStrEmpty} from "@/utils/tongai";
+import {parseStrEmpty} from "@/utils/tongai"
 
 // 查询用户列表
 export function listUser(query) {
@@ -105,7 +105,7 @@ export function updateUserPwd(oldPassword, newPassword) {
   return request({
     url: '/system/user/profile/updatePwd',
     method: 'put',
-    params: data
+    data: data
   })
 }
 
@@ -114,6 +114,7 @@ export function uploadAvatar(data) {
   return request({
     url: '/system/user/profile/avatar',
     method: 'post',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     data: data
   })
 }

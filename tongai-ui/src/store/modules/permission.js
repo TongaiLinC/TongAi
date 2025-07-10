@@ -38,9 +38,9 @@ const permission = {
           const rdata = JSON.parse(JSON.stringify(res.data))
           const sidebarRoutes = filterAsyncRouter(sdata)
           const rewriteRoutes = filterAsyncRouter(rdata, false, true)
-          const asyncRoutes = filterDynamicRoutes(dynamicRoutes);
+          const asyncRoutes = filterDynamicRoutes(dynamicRoutes)
           rewriteRoutes.push({ path: '*', redirect: '/404', hidden: true })
-          router.addRoutes(asyncRoutes);
+          router.addRoutes(asyncRoutes)
           commit('SET_ROUTES', rewriteRoutes)
           commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(sidebarRoutes))
           commit('SET_DEFAULT_ROUTES', sidebarRoutes)
@@ -82,24 +82,13 @@ function filterAsyncRouter(asyncRouterMap, lastRouter = false, type = false) {
 
 function filterChildren(childrenMap, lastRouter = false) {
   var children = []
-  childrenMap.forEach((el, index) => {
-    if (el.children && el.children.length) {
-      if (el.component === 'ParentView' && !lastRouter) {
-        el.children.forEach(c => {
-          c.path = el.path + '/' + c.path
-          if (c.children && c.children.length) {
-            children = children.concat(filterChildren(c.children, c))
-            return
-          }
-          children.push(c)
-        })
-        return
-      }
+  childrenMap.forEach(el => {
+    el.path = lastRouter ? lastRouter.path + '/' + el.path : el.path
+    if (el.children && el.children.length && el.component === 'ParentView') {
+      children = children.concat(filterChildren(el.children, el))
+    } else {
+      children.push(el)
     }
-    if (lastRouter) {
-      el.path = lastRouter.path + '/' + el.path
-    }
-    children = children.concat(el)
   })
   return children
 }

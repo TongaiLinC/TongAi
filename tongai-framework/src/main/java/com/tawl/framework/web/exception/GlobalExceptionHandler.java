@@ -2,9 +2,11 @@ package com.tawl.framework.web.exception;
 
 import com.tawl.common.constant.HttpStatus;
 import com.tawl.common.core.domain.AjaxResult;
+import com.tawl.common.core.text.Convert;
 import com.tawl.common.exception.DemoModeException;
 import com.tawl.common.exception.ServiceException;
 import com.tawl.common.utils.StringUtils;
+import com.tawl.common.utils.html.EscapeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * 全局异常处理器
@@ -80,8 +82,13 @@ public class GlobalExceptionHandler
     public AjaxResult handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, HttpServletRequest request)
     {
         String requestURI = request.getRequestURI();
+        String value = Convert.toStr(e.getValue());
+        if (StringUtils.isNotEmpty(value))
+        {
+            value = EscapeUtil.clean(value);
+        }
         log.error("请求参数类型不匹配'{}',发生系统异常.", requestURI, e);
-        return AjaxResult.error(String.format("请求参数类型不匹配，参数[%s]要求类型为：'%s'，但输入值为：'%s'", e.getName(), e.getRequiredType().getName(), e.getValue()));
+        return AjaxResult.error(String.format("请求参数类型不匹配，参数[%s]要求类型为：'%s'，但输入值为：'%s'", e.getName(), e.getRequiredType().getName(), value));
     }
 
     /**

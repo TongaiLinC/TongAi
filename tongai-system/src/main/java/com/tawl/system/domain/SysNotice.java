@@ -2,13 +2,11 @@ package com.tawl.system.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tawl.common.core.domain.BaseEntity;
-import com.tawl.common.xss.Xss;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.util.Date;
 
 /**
@@ -16,7 +14,8 @@ import java.util.Date;
  *
  * @author tongai
  */
-@Getter
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class SysNotice extends BaseEntity {
     private static final long serialVersionUID = 1L;
     /**
@@ -75,52 +74,10 @@ public class SysNotice extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date publishTime;
 
-    public void setWeight(String weight) {
-        this.weight = weight;
-    }
-
-    public void setPublishTime(Date publishTime) {
-        this.publishTime = publishTime;
-    }
-
-    public void setReceiverId(Long receiverId) {
-        this.receiverId = receiverId;
-    }
-
-    public void setUserIds(String userIds) {
-        this.userIds = userIds;
-    }
-
-    public void setIsRead(String isRead) {
-        this.isRead = isRead;
-    }
-
-    public void setNoticeId(Long noticeId) {
-        this.noticeId = noticeId;
-    }
-
-    public void setNoticeTitle(String noticeTitle) {
-        this.noticeTitle = noticeTitle;
-    }
-
-    @Xss(message = "公告标题不能包含脚本字符")
-    @NotBlank(message = "公告标题不能为空")
-    @Size(min = 0, max = 50, message = "公告标题不能超过50个字符")
-    public String getNoticeTitle() {
-        return noticeTitle;
-    }
-
-    public void setNoticeType(String noticeType) {
-        this.noticeType = noticeType;
-    }
-
-    public void setNoticeContent(String noticeContent) {
-        this.noticeContent = noticeContent;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    /**
+     * 发布者
+     */
+    private String publishUser;
 
     @Override
     public String toString() {
@@ -139,3 +96,4 @@ public class SysNotice extends BaseEntity {
                 .toString();
     }
 }
+

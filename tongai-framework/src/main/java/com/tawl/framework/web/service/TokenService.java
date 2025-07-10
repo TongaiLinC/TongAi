@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -49,7 +49,7 @@ public class TokenService
 
     protected static final long MILLIS_MINUTE = 60 * MILLIS_SECOND;
 
-    private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
+    private static final Long MILLIS_MINUTE_TWENTY = 20 * 60 * 1000L;
 
     @Autowired
     private RedisCache redisCache;
@@ -108,7 +108,7 @@ public class TokenService
     /**
      * 创建令牌
      *
-     * @param loginUser 用户信息
+     * @param loginUser 登录信息
      * @return 令牌
      */
     public String createToken(LoginUser loginUser)
@@ -120,6 +120,7 @@ public class TokenService
 
         Map<String, Object> claims = new HashMap<>();
         claims.put(Constants.LOGIN_USER_KEY, token);
+        claims.put(Constants.JWT_USERNAME, loginUser.getUsername());
         return createToken(claims);
     }
 
@@ -133,7 +134,7 @@ public class TokenService
     {
         long expireTime = loginUser.getExpireTime();
         long currentTime = System.currentTimeMillis();
-        if (expireTime - currentTime <= MILLIS_MINUTE_TEN)
+        if (expireTime - currentTime <= MILLIS_MINUTE_TWENTY)
         {
             refreshToken(loginUser);
         }
@@ -176,10 +177,7 @@ public class TokenService
      */
     private String createToken(Map<String, Object> claims)
     {
-        String token = Jwts.builder()
-                .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS512, secret).compact();
-        return token;
+      return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
     /**
@@ -190,10 +188,7 @@ public class TokenService
      */
     private Claims parseToken(String token)
     {
-        return Jwts.parser()
-                .setSigningKey(secret)
-                .parseClaimsJws(token)
-                .getBody();
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
     /**

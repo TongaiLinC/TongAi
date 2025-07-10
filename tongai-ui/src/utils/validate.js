@@ -1,4 +1,38 @@
 /**
+ * 路径匹配器
+ * @param {string} pattern
+ * @param {string} path
+ * @returns {Boolean}
+ */
+export function isPathMatch(pattern, path) {
+  const regexPattern = pattern.replace(/\//g, '\\/').replace(/\*\*/g, '.*').replace(/\*/g, '[^\\/]*')
+  const regex = new RegExp(`^${regexPattern}$`)
+  return regex.test(path)
+}
+
+/**
+ * 判断value字符串是否为空
+ * @param {string} value
+ * @returns {Boolean}
+ */
+export function isEmpty(value) {
+  if (value == null || value == "" || value == undefined || value == "undefined") {
+    return true
+  }
+  return false
+}
+
+/**
+ * 判断url是否是http或https
+ * @param {string} url
+ * @returns {Boolean}
+ */
+export function isHttp(url) {
+  return url.indexOf('http://') !== -1 || url.indexOf('https://') !== -1
+}
+
+/**
+ * 判断path是否为外链
  * @param {string} path
  * @returns {Boolean}
  */
@@ -56,7 +90,7 @@ export function validAlphabets(str) {
  * @returns {Boolean}
  */
 export function validEmail(email) {
-  const reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  const reg = /^(([^<>()\[\]\\.,:\s@"]+(\.[^<>()\[\]\\.,:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   return reg.test(email)
 }
 
@@ -74,10 +108,7 @@ export function validPhone(phone) {
  * @returns {Boolean}
  */
 export function isString(str) {
-  if (typeof str === 'string' || str instanceof String) {
-    return true
-  }
-  return false
+  return typeof str === 'string' || str instanceof String
 }
 
 /**

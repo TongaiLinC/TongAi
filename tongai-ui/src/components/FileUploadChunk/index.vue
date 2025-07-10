@@ -3,17 +3,17 @@ template
   <div class="file-upload">
     <!-- 文件上传组件 -->
     <el-upload
-        :multiple="multiple"
-        class="upload_file_Chunk"
-        drag
-        action="#"
-        :file-list="fileList"
-        :limit="limit"
-        :show-file-list="false"
-        :before-upload="beforeUpload"
-        :on-exceed="handleExceed"
-        :http-request="customUpload"
-        :disabled="uploading"
+      :multiple="multiple"
+      class="upload_file_Chunk"
+      drag
+      action="#"
+      :file-list="fileList"
+      :limit="limit"
+      :show-file-list="false"
+      :before-upload="beforeUpload"
+      :on-exceed="handleExceed"
+      :http-request="customUpload"
+      :disabled="uploading"
     >
       <i class="el-icon-upload"></i>
       <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -46,7 +46,7 @@ template
     </div>
 
     <!-- 文件预览对话框 -->
-    <el-dialog :visible.sync="previewVisible" width="600px" append-to-body>
+    <el-dialog :visible.sync="previewVisible" width="460px" append-to-body>
       <img v-if="previewType === 'image'" :src="previewUrl" style="width: 100%">
       <video v-else-if="previewType === 'video'" :src="previewUrl" controls style="width: 100%"></video>
       <div v-else>
@@ -59,8 +59,8 @@ template
 
 <script>
 import SparkMD5 from 'spark-md5'
-import { checkFile, mergeChunks, upload, uploadChunk } from '@/api/system/fileinfo'
-import { formatFileSize } from '@/utils/tongai'
+import {checkFile, mergeChunks, upload, uploadChunk} from '@/api/system/fileinfo'
+import {formatFileSize} from '@/utils/tongai'
 
 export default {
   name: 'FileUploadChunk',
@@ -84,7 +84,7 @@ export default {
     // 文件类型
     fileType: {
       type: Array,
-      default: () => ['doc', 'xls', 'docx', 'xlsx', 'ppt', 'txt', 'pdf', 'jpg', 'jpeg', 'png','mp4']
+      default: () => ['doc', 'xls', 'docx', 'xlsx', 'ppt', 'txt', 'pdf', 'jpg', 'jpeg', 'png', 'mp4']
     },
     // 文件大小限制
     fileSize: {
@@ -127,11 +127,15 @@ export default {
         const fileExt = extList[extList.length - 1]
         const isTypeOk = this.fileType.indexOf(fileExt) >= 0
         if (!isTypeOk) {
-          this.$modal.msgError(`文件格式不正确, 请上传${this.fileType.join('/')}格式文件!`)
+          this.$modal.msgError(`文件格式不正确，请上传${this.fileType.join("/")}格式文件!`);
           return false
         }
       }
-
+      // 校检文件名是否包含特殊字符
+      if (file.name.includes(',')) {
+        this.$modal.msgError('文件名不正确，不能包含英文逗号!');
+        return false;
+      }
       // 校检文件大小
       if (this.fileSize) {
         const isLt = file.size / 1024 / 1024 < this.fileSize
@@ -156,6 +160,7 @@ export default {
     },
     // 自定义上传方法
     async customUpload(options) {
+      console.log('customUpload', options)
       const { file } = options
       const fileName = file.name
       const fileExt = file.name.split('.')[1]
@@ -191,6 +196,10 @@ export default {
           formData.append('fileName', fileName)
           formData.append('fileSize', file.size)
 
+          // 打印 FormData 内容
+          for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+          }
           const uploadRes = await upload(formData, event => {
             this.progressPercent = Math.floor((event.loaded / event.total) * 100)
           })
@@ -225,6 +234,7 @@ export default {
             chunkFormData.append('totalChunks', chunkCount)
             chunkFormData.append('fileName', fileName)
             chunkFormData.append('fileSize', file.size)
+            chunkFormData.append('timestamp', new Date().getTime())
             await uploadChunk(chunkFormData)
             this.progressPercent = Math.floor(((i + 1) / chunkCount) * 100)
           }
@@ -253,7 +263,7 @@ export default {
       } finally {
         // 上传成功后
         if (this.uploadResult.success) {
-          this.fileList.push({ fileInfo: options.file, uploadResult: this.uploadResult })
+          this.fileList.push({fileInfo: options.file, uploadResult: this.uploadResult})
           console.log('fileList', this.fileList)
           this.emitChangeEvent(this.uploadResult)
         }
@@ -329,7 +339,7 @@ export default {
       // 如果当前value是字符串，转换为数组
       if (typeof this.value === 'string') {
         if (this.value) {
-          uploadList = this.value.split(',').map(url => ({ url }))
+          uploadList = this.value.split(',').map(url => ({url}))
         }
       } else if (Array.isArray(this.value)) {
         uploadList = [...this.value]
@@ -337,7 +347,7 @@ export default {
         uploadList = [this.value]
       }
       // 添加新文件
-      uploadList.push({ name: res.fileName, url: res.url })
+      uploadList.push({name: res.fileName, url: res.url})
       // 触发v-model更新
       this.$emit('change', this.listToString(uploadList))
     },

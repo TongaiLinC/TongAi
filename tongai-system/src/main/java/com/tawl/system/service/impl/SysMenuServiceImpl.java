@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 /**
  * 菜单 业务层处理
- * 
+ *
  * @author tongai
  */
 @Service
@@ -41,7 +41,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 根据用户查询系统菜单列表
-     * 
+     *
      * @param userId 用户ID
      * @return 菜单列表
      */
@@ -53,7 +53,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 查询系统菜单列表
-     * 
+     *
      * @param menu 菜单信息
      * @return 菜单列表
      */
@@ -76,7 +76,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 根据用户ID查询权限
-     * 
+     *
      * @param userId 用户ID
      * @return 权限列表
      */
@@ -97,7 +97,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 根据角色ID查询权限
-     * 
+     *
      * @param roleId 角色ID
      * @return 权限列表
      */
@@ -118,7 +118,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 根据用户ID查询菜单
-     * 
+     *
      * @param userId 用户名称
      * @return 菜单列表
      */
@@ -139,7 +139,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 根据角色ID查询菜单树信息
-     * 
+     *
      * @param roleId 角色ID
      * @return 选中菜单列表
      */
@@ -152,7 +152,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 构建前端路由所需要的菜单
-     * 
+     *
      * @param menus 菜单列表
      * @return 路由列表
      */
@@ -183,7 +183,7 @@ public class SysMenuServiceImpl implements ISysMenuService
                 RouterVo children = new RouterVo();
                 children.setPath(menu.getPath());
                 children.setComponent(menu.getComponent());
-                children.setName(StringUtils.capitalize(menu.getPath()));
+                children.setName(getRouteName(menu.getRouteName(), menu.getPath()));
                 children.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), StringUtils.equals("1", menu.getIsCache()), menu.getPath()));
                 children.setQuery(menu.getQuery());
                 childrenList.add(children);
@@ -198,7 +198,7 @@ public class SysMenuServiceImpl implements ISysMenuService
                 String routerPath = innerLinkReplaceEach(menu.getPath());
                 children.setPath(routerPath);
                 children.setComponent(UserConstants.INNER_LINK);
-                children.setName(StringUtils.capitalize(routerPath));
+                children.setName(getRouteName(menu.getRouteName(), routerPath));
                 children.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), menu.getPath()));
                 childrenList.add(children);
                 router.setChildren(childrenList);
@@ -210,7 +210,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 构建前端所需要树结构
-     * 
+     *
      * @param menus 菜单列表
      * @return 树结构列表
      */
@@ -238,7 +238,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 构建前端所需要下拉树结构
-     * 
+     *
      * @param menus 菜单列表
      * @return 下拉树结构列表
      */
@@ -251,7 +251,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 根据菜单ID查询信息
-     * 
+     *
      * @param menuId 菜单ID
      * @return 菜单信息
      */
@@ -263,7 +263,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 是否存在菜单子节点
-     * 
+     *
      * @param menuId 菜单ID
      * @return 结果
      */
@@ -276,7 +276,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 查询菜单使用数量
-     * 
+     *
      * @param menuId 菜单ID
      * @return 结果
      */
@@ -289,7 +289,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 新增保存菜单信息
-     * 
+     *
      * @param menu 菜单信息
      * @return 结果
      */
@@ -301,7 +301,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 修改保存菜单信息
-     * 
+     *
      * @param menu 菜单信息
      * @return 结果
      */
@@ -313,7 +313,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 删除菜单管理信息
-     * 
+     *
      * @param menuId 菜单ID
      * @return 结果
      */
@@ -325,7 +325,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 校验菜单名称是否唯一
-     * 
+     *
      * @param menu 菜单信息
      * @return 结果
      */
@@ -343,24 +343,36 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 获取路由名称
-     * 
+     *
      * @param menu 菜单信息
      * @return 路由名称
      */
     public String getRouteName(SysMenu menu)
     {
-        String routerName = StringUtils.capitalize(menu.getPath());
         // 非外链并且是一级目录（类型为目录）
         if (isMenuFrame(menu))
         {
-            routerName = StringUtils.EMPTY;
+            return StringUtils.EMPTY;
         }
-        return routerName;
+        return getRouteName(menu.getRouteName(), menu.getPath());
+    }
+
+    /**
+     * 获取路由名称，如没有配置路由名称则取路由地址
+     *
+     * @param name 路由名称
+     * @param path 路由地址
+     * @return 路由名称（驼峰格式）
+     */
+    public String getRouteName(String name, String path)
+    {
+        String routerName = StringUtils.isNotEmpty(name) ? name : path;
+        return StringUtils.capitalize(routerName);
     }
 
     /**
      * 获取路由地址
-     * 
+     *
      * @param menu 菜单信息
      * @return 路由地址
      */
@@ -388,7 +400,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 获取组件信息
-     * 
+     *
      * @param menu 菜单信息
      * @return 组件信息
      */
@@ -412,7 +424,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 是否为菜单内部跳转
-     * 
+     *
      * @param menu 菜单信息
      * @return 结果
      */
@@ -424,7 +436,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 是否为内链组件
-     * 
+     *
      * @param menu 菜单信息
      * @return 结果
      */
@@ -435,7 +447,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 是否为parent_view组件
-     * 
+     *
      * @param menu 菜单信息
      * @return 结果
      */
@@ -446,7 +458,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 根据父节点的ID获取所有子节点
-     * 
+     *
      * @param list 分类表
      * @param parentId 传入的父节点ID
      * @return String
@@ -469,7 +481,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 递归列表
-     * 
+     *
      * @param list 分类表
      * @param t 子节点
      */
@@ -515,7 +527,7 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     /**
      * 内链域名特殊字符替换
-     * 
+     *
      * @return 替换后的内链域名
      */
     public String innerLinkReplaceEach(String path)

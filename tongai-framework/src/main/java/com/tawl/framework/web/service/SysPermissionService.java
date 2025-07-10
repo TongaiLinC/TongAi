@@ -1,7 +1,9 @@
 package com.tawl.framework.web.service;
 
+import com.tawl.common.constant.UserConstants;
 import com.tawl.common.core.domain.entity.SysRole;
 import com.tawl.common.core.domain.entity.SysUser;
+import com.tawl.common.utils.StringUtils;
 import com.tawl.system.service.ISysMenuService;
 import com.tawl.system.service.ISysRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,9 +71,12 @@ public class SysPermissionService
                 // 多角色设置permissions属性，以便数据权限匹配权限
                 for (SysRole role : roles)
                 {
-                    Set<String> rolePerms = menuService.selectMenuPermsByRoleId(role.getRoleId());
-                    role.setPermissions(rolePerms);
-                    perms.addAll(rolePerms);
+                    if (StringUtils.equals(role.getStatus(), UserConstants.ROLE_NORMAL) && !role.isAdmin())
+                    {
+                        Set<String> rolePerms = menuService.selectMenuPermsByRoleId(role.getRoleId());
+                        role.setPermissions(rolePerms);
+                        perms.addAll(rolePerms);
+                    }
                 }
             }
             else

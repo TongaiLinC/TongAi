@@ -91,7 +91,6 @@ public class SysNoticeController extends BaseController
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysNotice notice)
     {
-        notice.setUpdateBy(getUsername());
         return toAjax(noticeService.updateNotice(notice));
     }
 

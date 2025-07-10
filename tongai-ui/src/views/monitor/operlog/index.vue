@@ -258,7 +258,7 @@ export default {
       // 日期范围
       dateRange: [],
       // 默认排序
-      defaultSort: { prop: 'operTime', order: 'descending' },
+      defaultSort: { prop: "loginTime", order: "descending" },
       // 表单参数
       form: {},
       // 查询参数

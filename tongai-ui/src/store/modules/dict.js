@@ -12,7 +12,7 @@ const mutations = {
   },
   REMOVE_DICT: (state, key) => {
     try {
-      for (let i = 0; i < state.dict.length; i++) {
+      for (let i = 0 ;i < state.dict.length; i++) {
         if (state.dict[i].key == key) {
           state.dict.splice(i, 1)
           return true

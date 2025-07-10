@@ -1,6 +1,6 @@
 import {Loading, Message, MessageBox, Notification} from 'element-ui'
 
-let loadingInstance;
+let loadingInstance
 
 export default {
   // 消息提示
@@ -41,7 +41,7 @@ export default {
   },
   // 错误通知
   notifyError(content) {
-    Notification.error({title: "错误", message: content});
+    Notification.error({title: "错误", message: content})
   },
   // 成功通知
   notifySuccess(content) {
@@ -78,6 +78,6 @@ export default {
   },
   // 关闭遮罩层
   closeLoading() {
-    loadingInstance.close();
+    loadingInstance.close()
   }
 }

@@ -3,7 +3,7 @@ package com.tawl.common.utils.ip;
 import com.tawl.common.utils.ServletUtils;
 import com.tawl.common.utils.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 

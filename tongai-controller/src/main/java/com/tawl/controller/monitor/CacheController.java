@@ -35,6 +35,7 @@ public class CacheController
         caches.add(new SysCache(CacheConstants.PWD_ERR_CNT_KEY, "密码错误次数"));
     }
 
+    @SuppressWarnings("deprecation")
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")
     @GetMapping()
     public AjaxResult getInfo() throws Exception
@@ -71,7 +72,7 @@ public class CacheController
     public AjaxResult getCacheKeys(@PathVariable String cacheName)
     {
         Set<String> cacheKeys = redisTemplate.keys(cacheName + "*");
-        return AjaxResult.success(cacheKeys);
+        return AjaxResult.success(new TreeSet<>(cacheKeys));
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")

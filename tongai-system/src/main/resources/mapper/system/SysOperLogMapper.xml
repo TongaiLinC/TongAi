@@ -82,9 +82,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<update id="cleanOperLog">
         delete from sys_oper_log
-		<if test="days != null and days != ''">
-			where oper_time &lt; DATE_SUB(NOW(), INTERVAL #{days} DAY);
-		</if>
+		<where>
+			<if test="days != null and days != ''">
+            	oper_time &lt; DATE_SUB(NOW(), INTERVAL #{days} DAY)
+			</if>
+		</where>
+		<!-- 删除数量限制（可选） -->
+		LIMIT 1000
     </update>
 
 </mapper> 

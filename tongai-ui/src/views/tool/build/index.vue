@@ -190,7 +190,6 @@ export default {
     }
   },
   watch: {
-    // eslint-disable-next-line func-names
     'activeData.label': function (val, oldVal) {
       if (
         this.activeData.placeholder === undefined
@@ -275,7 +274,7 @@ export default {
     },
     execDownload(data) {
       const codeStr = this.generateCode()
-      const blob = new Blob([codeStr], { type: 'text/plain;charset=utf-8' })
+      const blob = new Blob([codeStr], { type: 'text/plaincharset=utf-8' })
       this.$download.saveAs(blob, data.fileName)
     },
     execCopy(data) {

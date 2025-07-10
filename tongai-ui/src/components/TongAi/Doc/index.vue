@@ -6,10 +6,10 @@
 
 <script>
 export default {
-  name: 'RuoYiDoc',
+  name: 'TongAiDoc',
   data() {
     return {
-      url: 'http://doc.ruoyi.vip/tongai-vue'
+      url: 'http://docs.tongai.vip/tongai-vue'
     }
   },
   methods: {

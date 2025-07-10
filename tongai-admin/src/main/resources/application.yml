@@ -3,12 +3,12 @@ tongai:
   # 名称
   name: TongAi
   # 版本
-  version: 1.0.0
+  version: 2.0.0
   # 版权年份
-  copyrightYear: 2023
+  copyrightYear: 2025
   # 实例演示开关
   demoEnabled: false
-  # 文件路径 示例（ Windows配置D:/tongai/uploadPath，Linux配置 /home/tongai/uploadPath，MAC配置：/Users/mac/Desktop/tongai/uploadPath）
+  # 文件路径 示例（ Windows配置D:/tongai/uploadPath，Linux配置 /www/wwwroot/www.tongai.vip/uploadPath，MAC配置：/Users/mac/Desktop/tongai/uploadPath）
   profile: D:/tongai/uploadPath
   # 获取ip地址开关
   addressEnabled: true
@@ -46,35 +46,6 @@ user:
     # 密码锁定时间（默认10分钟）
     lockTime: 10
 
-# 云服务配置
-cloud:
-  # 平台默认腾讯云   腾讯云：tx  阿里云: ali  七牛云：qn
-  platform: ali
-  # 秘钥ID
-  secretId: XXXXXXXXXXXXXXXXXX
-  # 秘钥Key
-  secretKey: XXXXXXXXXXXXXXXXXXXX
-  # 短信配置
-  sms:
-    # sdkAppid（腾讯云短信需要填写）
-    sdkAppId: XXXXXX
-    # 验证码短信模板ID
-    templateId: XXXXXX
-    # 验证码短信签名
-    signName: XXXX
-    # 地域信息（默认 ap-guangzhou 腾讯云可用）
-    region: ap-guangzhou
-    #  短信过期时间（默认 5 分钟,阿里云验证码短信为固定值）
-    expireTime: 5
-  # 对象存储配置
-  cos:
-    # 存储桶名称
-    bucketName: example
-    # 存储桶地域信息(阿里云中的Endpoint中的地区)
-    bucketRegion: hangzhou
-    # 阿里云存储桶地址前缀（阿里云OSS）
-    bucketEndpoint: oss-cn-hangzhou.aliyuncs.com
-
 # Spring配置
 spring:
   # 资源信息
@@ -87,36 +58,38 @@ spring:
   servlet:
     multipart:
       # 单个文件大小
-      max-file-size: 10MB
+      max-file-size: 500MB
       # 设置总上传的文件大小
-      max-request-size: 20MB
+      max-request-size: 1024MB
   # 服务模块
   devtools:
     restart:
       # 热部署开关
       enabled: true
   # redis 配置
-  redis:
-    # 地址
-    host: localhost
-    # 端口，默认为6379
-    port: 6379
-    # 数据库索引
-    database: 0
-    # 密码
-    password:
-    # 连接超时时间
-    timeout: 10s
-    lettuce:
-      pool:
-        # 连接池中的最小空闲连接
-        min-idle: 0
-        # 连接池中的最大空闲连接
-        max-idle: 8
-        # 连接池的最大数据库连接数
-        max-active: 8
-        # #连接池最大阻塞等待时间（使用负值表示没有限制）
-        max-wait: -1ms
+  data:
+    # redis 配置
+    redis:
+      # 地址
+      host: localhost
+      # 端口，默认为6379
+      port: 6379
+      # 数据库索引
+      database: 0
+      # 密码
+      password:
+      # 连接超时时间
+      timeout: 10s
+      lettuce:
+        pool:
+          # 连接池中的最小空闲连接
+          min-idle: 0
+          # 连接池中的最大空闲连接
+          max-idle: 8
+          # 连接池的最大数据库连接数
+          max-active: 8
+          # #连接池最大阻塞等待时间（使用负值表示没有限制）
+          max-wait: -1ms
 
 # token配置
 token:
@@ -130,6 +103,7 @@ token:
 # MyBatis Plus配置
 mybatis-plus:
   global-config:
+    banner: false
     db-config:
       # 设置动态代理方式为CGLIB
       proxy-type: CGLIB
@@ -148,12 +122,19 @@ pagehelper:
   supportMethodsArguments: true
   params: count=countSql
 
-# Swagger配置
-swagger:
-  # 是否开启swagger
-  enabled: true
-  # 请求前缀
-  pathMapping: /dev-api
+# Springdoc配置
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    tags-sorter: alpha
+  group-configs:
+    - group: 'default'
+      display-name: '测试模块'
+      paths-to-match: '/**'
+      packages-to-scan: com.tawl.controller.tool
 
 # 防止XSS攻击
 xss:

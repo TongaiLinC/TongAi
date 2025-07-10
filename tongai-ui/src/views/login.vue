@@ -1,8 +1,8 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">同乂管理系统</h3>
-      <el-tabs v-model="activeName" type="border-card" style="border-radius: 10px;margin-bottom: 15px">
+      <h3 class="title">{{ title }}</h3>
+      <el-tabs v-model="activeName" type="border-card" style="border-radius: 10pxmargin-bottom: 15px">
         <el-tab-pane label="账号登录" name="userAccount">
           <el-form-item prop="username">
             <el-input
@@ -115,36 +115,37 @@ export default {
   data() {
     var validatePhone = (rule, value, callback) => {
       if (this.activeName === 'userPhone' && value === '') {
-        callback(new Error('请输入手机号'));
+        callback(new Error('请输入手机号'))
       } else {
         if (this.activeName === 'userPhone' && this.loginForm.phone !== '') {
           if (!validPhone(this.loginForm.phone)) {
             callback(new Error('请输入正确的手机号'))
           }
         }
-        callback();
+        callback()
       }
-    };
+    }
     var validateUserName = (rule, value, callback) => {
       if (this.activeName === 'userAccount' &&value === '') {
-        callback(new Error('请输入用户名'));
+        callback(new Error('请输入用户名'))
       }
       callback()
-    };
+    }
     var validatePassword = (rule, value, callback) => {
       if (this.activeName === 'userAccount' &&value === '') {
-        callback(new Error('请输入密码'));
+        callback(new Error('请输入密码'))
       }
-      callback();
-    };
+      callback()
+    }
     var validateCode = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入验证码'));
+        callback(new Error('请输入验证码'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
+      title: process.env.VUE_APP_TITLE,
       codeUrl: '',
       codeText: '获取验证码',
       disable: false,
@@ -204,6 +205,10 @@ export default {
       })
     },
     getSmsCode() {
+      if (!validPhone(this.loginForm.phone)) {
+        this.$message.error('请输入正确的手机号')
+        return
+      }
       this.disable = true
       let times = 60
       getSmsCode(this.loginForm.phone).then(res => {
@@ -213,7 +218,7 @@ export default {
             clearInterval(time)
             this.disable = false
             this.codeText = '获取验证码'
-            return;
+            return
           }
           times = times - 1
           this.codeText = times + "秒后重试"
@@ -283,6 +288,7 @@ export default {
   background: #ffffff;
   width: 400px;
   padding: 25px 25px 5px 25px;
+  z-index: 1;
 
   .el-input {
     height: 38px;

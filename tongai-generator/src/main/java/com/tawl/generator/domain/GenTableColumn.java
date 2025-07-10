@@ -4,7 +4,7 @@ import com.tawl.common.core.domain.BaseEntity;
 import com.tawl.common.utils.StringUtils;
 import lombok.Getter;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * 代码生成业务字段表 gen_table_column

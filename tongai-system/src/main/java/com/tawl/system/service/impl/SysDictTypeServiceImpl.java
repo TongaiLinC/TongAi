@@ -1,13 +1,5 @@
 package com.tawl.system.service.impl;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.tawl.common.constant.UserConstants;
 import com.tawl.common.core.domain.entity.SysDictData;
 import com.tawl.common.core.domain.entity.SysDictType;
@@ -17,6 +9,15 @@ import com.tawl.common.utils.StringUtils;
 import com.tawl.system.mapper.SysDictDataMapper;
 import com.tawl.system.mapper.SysDictTypeMapper;
 import com.tawl.system.service.ISysDictTypeService;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 字典 业务层处理

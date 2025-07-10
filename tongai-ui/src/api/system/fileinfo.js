@@ -54,16 +54,14 @@ export function checkFile(data) {
 
 // 分片上传文件管理
 export function upload(data, onUploadProgress) {
-  const config = {}
-
-  if (onUploadProgress) {
-    config.onUploadProgress = onUploadProgress
-  }
   return request({
     url: '/common/upload',
     method: 'post',
-    data: data,
-    ...config
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    onUploadProgress: onUploadProgress,
+    data: data
   })
 }
 
@@ -73,6 +71,7 @@ export function uploadChunk(data) {
     url: '/common/uploadChunk',
     method: 'post',
     headers: {
+      'Content-Type': 'multipart/form-data',
       repeatSubmit: false
     },
     data: data

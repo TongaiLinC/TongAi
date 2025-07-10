@@ -1,4 +1,4 @@
-import {mergeRecursive} from "@/utils/tongai";
+import {mergeRecursive} from "@/utils/tongai"
 import DictOptions from './DictOptions'
 
 /**

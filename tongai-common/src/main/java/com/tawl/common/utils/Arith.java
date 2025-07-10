@@ -109,6 +109,6 @@ public class Arith
         }
         BigDecimal b = new BigDecimal(Double.toString(v));
         BigDecimal one = BigDecimal.ONE;
-        return b.divide(one, scale, RoundingMode.HALF_UP).doubleValue();
+        return b.divide(BigDecimal.ONE, scale, RoundingMode.HALF_UP).doubleValue();
     }
 }

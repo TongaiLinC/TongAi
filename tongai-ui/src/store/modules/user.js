@@ -2,6 +2,8 @@ import { getInfo, login, logout } from '@/api/login'
 import { getToken, removeToken, setToken } from '@/utils/auth'
 import { getUnReadCount } from '@/api/system/notice'
 import { Notification } from 'element-ui'
+import { isHttp, isEmpty } from "@/utils/validate"
+import defAva from '@/assets/images/profile.jpg'
 
 const user = {
   state: {
@@ -60,7 +62,7 @@ const user = {
                 Notification.info({
                   title: '消息中心',
                   dangerouslyUseHTMLString: true,
-                  message: '您有<span style="font-size: 26px;color: #ff0000">' + res + '</span>条未读消息，请前往消息中心查看！',
+                  message: '您有<span style="font-size: 26pxcolor: #ff0000">' + res + '</span>条未读消息，请前往消息中心查看！',
                   offset: 10,
                   duration: 2500
                 })
@@ -81,7 +83,10 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(res => {
           const user = res.user
-          const avatar = (user.avatar == '' || user.avatar == null) ? require('@/assets/images/profile.jpg') : process.env.VUE_APP_BASE_API + user.avatar
+          let avatar = user.avatar || ""
+          if (!isHttp(avatar)) {
+            avatar = (isEmpty(avatar)) ? defAva : process.env.VUE_APP_BASE_API + avatar
+          }
           if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', res.roles)
             commit('SET_PERMISSIONS', res.permissions)
@@ -95,6 +100,12 @@ const user = {
           getUnReadCount().then((res) => {
             commit('SET_UNREAD_COUNT', res)
           })
+          /* 过期密码提示 */
+          if(!res.isDefaultModifyPwd && res.isPasswordExpired) {
+            MessageBox.confirm('您的密码已过期，请尽快修改密码！',  '安全提示', {  confirmButtonText: '确定',  cancelButtonText: '取消',  type: 'warning' }).then(() => {
+              router.push({ name: 'Profile', params: { activeTab: 'resetPwd' } })
+            }).catch(() => {})
+          }
           resolve(res)
         }).catch(error => {
           reject(error)

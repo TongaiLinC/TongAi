@@ -57,6 +57,7 @@ public @interface Excel
     /**
      * BigDecimal 舍入规则 默认:BigDecimal.ROUND_HALF_EVEN
      */
+    @SuppressWarnings("deprecation")
     public int roundingMode() default BigDecimal.ROUND_HALF_EVEN;
 
     /**
@@ -85,9 +86,19 @@ public @interface Excel
     public String prompt() default "";
 
     /**
+     * 是否允许内容换行
+     */
+    public boolean wrapText() default false;
+
+    /**
      * 设置只能选择不能输入的列内容.
      */
     public String[] combo() default {};
+
+    /**
+     * 是否从字典读数据到combo,默认不读取,如读取需要设置dictType注解.
+     */
+    public boolean comboReadDict() default false;
 
     /**
      * 是否需要纵向合并单元格,应对需求:含有list集合单元格)
@@ -172,7 +183,7 @@ public @interface Excel
 
     public enum ColumnType
     {
-        NUMERIC(0), STRING(1), IMAGE(2);
+        NUMERIC(0), STRING(1), IMAGE(2), TEXT(3);
         private final int value;
 
         ColumnType(int value)

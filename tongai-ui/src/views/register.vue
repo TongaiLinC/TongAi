@@ -1,7 +1,7 @@
 <template>
   <div class="register">
     <el-form ref="registerForm" :model="registerForm" :rules="registerRules" class="register-form">
-      <h3 class="title">同乂后台管理系统</h3>
+      <h3 class="title">{{ title }}</h3>
       <el-form-item prop="username">
         <el-input v-model="registerForm.username" auto-complete="off" placeholder="账号" type="text">
           <svg-icon slot="prefix" class="el-input__icon input-icon" icon-class="user"/>
@@ -9,33 +9,33 @@
       </el-form-item>
       <el-form-item prop="password">
         <el-input
-            v-model="registerForm.password"
-            auto-complete="off"
-            placeholder="密码"
-            type="password"
-            @keyup.enter.native="handleRegister"
+          v-model="registerForm.password"
+          auto-complete="off"
+          placeholder="密码"
+          type="password"
+          @keyup.enter.native="handleRegister"
         >
           <svg-icon slot="prefix" class="el-input__icon input-icon" icon-class="password"/>
         </el-input>
       </el-form-item>
       <el-form-item prop="confirmPassword">
         <el-input
-            v-model="registerForm.confirmPassword"
-            auto-complete="off"
-            placeholder="确认密码"
-            type="password"
-            @keyup.enter.native="handleRegister"
+          v-model="registerForm.confirmPassword"
+          auto-complete="off"
+          placeholder="确认密码"
+          type="password"
+          @keyup.enter.native="handleRegister"
         >
           <svg-icon slot="prefix" class="el-input__icon input-icon" icon-class="password"/>
         </el-input>
       </el-form-item>
       <el-form-item v-if="captchaEnabled" prop="code">
         <el-input
-            v-model="registerForm.code"
-            auto-complete="off"
-            placeholder="验证码"
-            style="width: 63%"
-            @keyup.enter.native="handleRegister"
+          v-model="registerForm.code"
+          auto-complete="off"
+          placeholder="验证码"
+          style="width: 63%"
+          @keyup.enter.native="handleRegister"
         >
           <svg-icon slot="prefix" class="el-input__icon input-icon" icon-class="validCode"/>
         </el-input>
@@ -45,12 +45,12 @@
       </el-form-item>
       <el-form-item style="width:100%;">
         <el-button
-            round
-            :loading="loading"
-            size="medium"
-            style="width:100%;"
-            type="primary"
-            @click.native.prevent="handleRegister"
+          round
+          :loading="loading"
+          size="medium"
+          style="width:100%;"
+          type="primary"
+          @click.native.prevent="handleRegister"
         >
           <span v-if="!loading">注 册</span>
           <span v-else>注 册 中...</span>
@@ -81,6 +81,7 @@ export default {
       }
     }
     return {
+      title: process.env.VUE_APP_TITLE,
       codeUrl: '',
       registerForm: {
         username: '',
@@ -91,18 +92,19 @@ export default {
       },
       registerRules: {
         username: [
-          { required: true, trigger: 'blur', message: '请输入您的账号' },
-          { min: 2, max: 20, message: '用户账号长度必须介于 2 和 20 之间', trigger: 'blur' }
+          {required: true, trigger: 'blur', message: '请输入您的账号'},
+          {min: 2, max: 20, message: '用户账号长度必须介于 2 和 20 之间', trigger: 'blur'}
         ],
         password: [
-          { required: true, trigger: 'blur', message: '请输入您的密码' },
-          { min: 5, max: 20, message: '用户密码长度必须介于 5 和 20 之间', trigger: 'blur' }
+          {required: true, trigger: 'blur', message: '请输入您的密码'},
+          {min: 5, max: 20, message: '用户密码长度必须介于 5 和 20 之间', trigger: 'blur'},
+          {pattern: /^[^<>"'|\\]+$/, message: "不能包含非法字符：< > \" ' \\\ |", trigger: "blur"}
         ],
         confirmPassword: [
-          { required: true, trigger: 'blur', message: '请再次输入您的密码' },
-          { required: true, validator: equalToPassword, trigger: 'blur' }
+          {required: true, trigger: 'blur', message: '请再次输入您的密码'},
+          {required: true, validator: equalToPassword, trigger: 'blur'}
         ],
-        code: [{ required: true, trigger: 'change', message: '请输入验证码' }]
+        code: [{required: true, trigger: 'change', message: '请输入验证码'}]
       },
       loading: false,
       captchaEnabled: true

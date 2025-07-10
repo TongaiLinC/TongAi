@@ -1,7 +1,6 @@
 package com.tawl.controller.common;
 
 import com.tawl.common.config.TongAiConfig;
-import com.tawl.common.constant.Constants;
 import com.tawl.common.core.domain.AjaxResult;
 import com.tawl.common.utils.DateUtils;
 import com.tawl.common.utils.SecurityUtils;
@@ -14,6 +13,8 @@ import com.tawl.system.domain.SysFileChunkInfo;
 import com.tawl.system.domain.SysFileInfo;
 import com.tawl.system.service.ISysConfigService;
 import com.tawl.system.service.ISysFileInfoService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,7 +114,7 @@ public class CommonController {
         fileInfo.setIdentifier(identifier);
         fileInfo.setComplete(true);
         ajax.put("filePath", fileName);
-        ajax.put("fileName", FileUtils.getName(fileName));
+        ajax.put("fileName", FileUtils.getNameNotSuffix(fileName));
         // 保存文件信息
         sysFileInfoService.insertSysFileInfo(fileInfo);
       } catch (Exception e) {
@@ -172,7 +171,7 @@ public class CommonController {
       // 本地资源路径
       String localPath = TongAiConfig.getProfile();
       // 数据库资源地址
-      String downloadPath = localPath + StringUtils.substringAfter(resource, Constants.RESOURCE_PREFIX);
+      String downloadPath = localPath + FileUtils.stripPrefix(resource);
       // 下载名称
       String downloadName = StringUtils.substringAfterLast(downloadPath, "/");
       response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);

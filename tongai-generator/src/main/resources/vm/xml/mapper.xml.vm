@@ -12,19 +12,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #if($table.sub)
 
     <resultMap id="${ClassName}${subClassName}Result" type="${ClassName}" extends="${ClassName}Result">
-        <collection property="${subclassName}List" notNullColumn="sub_${subTable.pkColumn.columnName}" javaType="java.util.List" resultMap="${subClassName}Result" />
+        <collection property="${subclassName}List" ofType="${subClassName}" column="${pkColumn.columnName}" select="select${subClassName}List" />
     </resultMap>
 
     <resultMap type="${subClassName}" id="${subClassName}Result">
 #foreach ($column in $subTable.columns)
-        <result property="${column.javaField}"    column="sub_${column.columnName}"    />
+         <result property="${column.javaField}"    column="${column.columnName}"    />
 #end
     </resultMap>
 #end
 
     <sql id="select${ClassName}Vo">
-        select#foreach($column in $columns) a.$column.columnName#if($foreach.count != $columns.size()),#end#end from
-            ${tableName} a #if(${dataAuth}=='1')left join sys_dept d on a.dept_id = d.dept_id left join sys_user u on a.user_id = u.user_id#end
+        elect#foreach($column in $columns) $column.columnName#if($foreach.count != $columns.size()),#end#end from ${tableName}
     </sql>
 
     <select id="select${ClassName}List" parameterType="${ClassName}" resultMap="${ClassName}Result">
@@ -76,7 +75,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where a.${pkColumn.columnName} = #{${pkColumn.javaField}}
 #end
     </select>
+#if($table.sub)
 
+    <select id="select${subClassName}List" resultMap="${subClassName}Result">
+        select#foreach ($column in $subTable.columns) $column.columnName#if($foreach.count != $subTable.columns.size()),#end#end
+        from ${subTableName}
+        where ${subTableFkName} = #{${subTableFkName}}
+    </select>
+#end
     <insert id="insert${ClassName}" parameterType="${ClassName}"#if($pkColumn.increment) useGeneratedKeys="true" keyProperty="$pkColumn.javaField"#end>
         insert into ${tableName}
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -145,7 +151,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <insert id="batch${subClassName}">
         insert into ${subTableName}(#foreach($column in $subTable.columns) $column.columnName#if($foreach.count != $subTable.columns.size()),#end#end) values
-		<foreach item="item" index="index" collection="list" separator=",">
+        <foreach item="item" index="index" collection="list" separator=",">
             (#foreach($column in $subTable.columns) #{item.$column.javaField}#if($foreach.count != $subTable.columns.size()),#end#end)
         </foreach>
     </insert>

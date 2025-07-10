@@ -113,11 +113,12 @@
                 :options="menuOptions"
                 :normalizer="normalizer"
                 :show-count="true"
-                @select="menuSelectChange"
                 placeholder="选择上级菜单"
               />
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="24">
             <el-form-item label="菜单类型" prop="menuType">
               <el-radio-group v-model="form.menuType">
@@ -127,30 +128,17 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="24" v-if="form.menuType != 'F'">
+        </el-row>
+        <el-row>
+          <el-col :span="12" v-if="form.menuType != 'F'">
             <el-form-item label="菜单图标" prop="icon">
-              <el-popover
-                placement="bottom-start"
-                width="460"
-                trigger="click"
-                @show="$refs['iconSelect'].reset()"
-              >
+              <el-popover placement="bottom-start" width="460" trigger="click" @show="$refs['iconSelect'].reset()">
                 <IconSelect ref="iconSelect" @selected="selected" :active-icon="form.icon" />
                 <el-input slot="reference" v-model="form.icon" placeholder="点击选择图标" readonly>
-                  <svg-icon
-                    v-if="form.icon"
-                    slot="prefix"
-                    :icon-class="form.icon"
-                    style="width: 25px;"
-                  />
+                  <svg-icon v-if="form.icon" slot="prefix" :icon-class="form.icon" style="width: 25px;"/>
                   <i v-else slot="prefix" class="el-icon-search el-input__icon" />
                 </el-input>
               </el-popover>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="菜单名称" prop="menuName">
-              <el-input v-model="form.menuName" placeholder="请输入菜单名称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -158,6 +146,26 @@
               <el-input-number v-model="form.orderNum" controls-position="right" :min="0" />
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="菜单名称" prop="menuName">
+              <el-input v-model="form.menuName" placeholder="请输入菜单名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" v-if="form.menuType == 'C'">
+            <el-form-item prop="routeName">
+              <el-input v-model="form.routeName" placeholder="请输入路由名称" />
+              <span slot="label">
+                <el-tooltip content="默认不填则和路由地址相同：如地址为：`user`，则名称为`User`（注意：为避免名字的冲突，特殊情况下请自定义，保证唯一性）" placement="top">
+                <i class="el-icon-question"></i>
+                </el-tooltip>
+                路由名称
+              </span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="12" v-if="form.menuType != 'F'">
             <el-form-item prop="isFrame">
               <span slot="label">
@@ -183,6 +191,8 @@
               <el-input v-model="form.path" placeholder="请输入路由地址" />
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="12" v-if="form.menuType == 'C'">
             <el-form-item prop="component">
               <span slot="label">
@@ -205,6 +215,8 @@
               </span>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="12" v-if="form.menuType == 'C'">
             <el-form-item prop="query">
               <el-input v-model="form.query" placeholder="请输入路由参数" maxlength="255" />
@@ -230,6 +242,8 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="12" v-if="form.menuType != 'F'">
             <el-form-item prop="visible">
               <span slot="label">
@@ -275,7 +289,7 @@
 </template>
 
 <script>
-import {addMenu, delMenu, getMaxChildSort, getMenu, listMenu, updateMenu} from "@/api/system/menu";
+import { listMenu, getMenu, delMenu, addMenu, updateMenu } from "@/api/system/menu";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import IconSelect from "@/components/IconSelect";
@@ -339,10 +353,6 @@ export default {
         this.loading = false;
       });
     },
-    /** 选择菜单查询子菜单最大排序值 */
-    menuSelectChange(menu){
-      this.getMaxChildSort(menu.menuId)
-    },
     /** 转换菜单数据结构 */
     normalizer(node) {
       if (node.children && !node.children.length) {
@@ -354,7 +364,6 @@ export default {
         children: node.children
       };
     },
-
     /** 查询菜单下拉树结构 */
     getTreeselect() {
       listMenu().then(response => {
@@ -403,7 +412,6 @@ export default {
       } else {
         this.form.parentId = 0;
       }
-      this.getMaxChildSort(this.form.parentId);
       this.open = true;
       this.title = "添加菜单";
     },
@@ -431,13 +439,13 @@ export default {
         if (valid) {
           if (this.form.menuId != undefined) {
             updateMenu(this.form).then(response => {
-              this.$modal.notifySuccess("修改成功");
+              this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
             addMenu(this.form).then(response => {
-              this.$modal.notifySuccess("新增成功");
+              this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
             });
@@ -451,14 +459,8 @@ export default {
         return delMenu(row.menuId);
       }).then(() => {
         this.getList();
-        this.$modal.notifySuccess("删除成功");
+        this.$modal.msgSuccess("删除成功");
       }).catch(() => {});
-    },
-    /** 获取子菜单最大排序值 */
-    getMaxChildSort(parentId){
-      getMaxChildSort(parentId).then(response => {
-        this.form.orderNum = response.data;
-      });
     }
   }
 };
