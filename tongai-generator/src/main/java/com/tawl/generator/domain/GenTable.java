@@ -3,11 +3,12 @@ package com.tawl.generator.domain;
 import com.tawl.common.constant.GenConstants;
 import com.tawl.common.core.domain.BaseEntity;
 import com.tawl.common.utils.StringUtils;
-import lombok.Getter;
-import org.apache.commons.lang3.ArrayUtils;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.util.List;
 
 /**
@@ -15,7 +16,9 @@ import java.util.List;
  * 
  * @author tongai
  */
-@Getter
+
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class GenTable extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -110,135 +113,8 @@ public class GenTable extends BaseEntity
     /** 导入导出 0-否，1-仅导出 2-仅导入 3-导入和导出*/
     private String isImportAndExport;
 
-    public void setIsImportAndExport(String isImportAndExport) {
-        this.isImportAndExport = isImportAndExport;
-    }
-
-    public void setTombstones(String tombstones) {
-        this.tombstones = tombstones;
-    }
-    public void setFrontTemplate(String frontTemplate) {
-        this.frontTemplate = frontTemplate;
-    }
-
-    public void setDataAuth(String dataAuth) {
-        this.dataAuth = dataAuth;
-    }
-
-    public void setTableId(Long tableId)
-    {
-        this.tableId = tableId;
-    }
-
-    public void setTableName(String tableName)
-    {
-        this.tableName = tableName;
-    }
-
-    public void setTableComment(String tableComment)
-    {
-        this.tableComment = tableComment;
-    }
-
-    public void setSubTableName(String subTableName)
-    {
-        this.subTableName = subTableName;
-    }
-
-    public void setSubTableFkName(String subTableFkName)
-    {
-        this.subTableFkName = subTableFkName;
-    }
-
-    public void setClassName(String className)
-    {
-        this.className = className;
-    }
-
-    public void setTplCategory(String tplCategory)
-    {
-        this.tplCategory = tplCategory;
-    }
-
-    public void setPackageName(String packageName)
-    {
-        this.packageName = packageName;
-    }
-
-    public void setModuleName(String moduleName)
-    {
-        this.moduleName = moduleName;
-    }
-
-    public void setBusinessName(String businessName)
-    {
-        this.businessName = businessName;
-    }
-
-    public void setFunctionName(String functionName)
-    {
-        this.functionName = functionName;
-    }
-
-    public void setFunctionAuthor(String functionAuthor)
-    {
-        this.functionAuthor = functionAuthor;
-    }
-
-    public void setGenType(String genType)
-    {
-        this.genType = genType;
-    }
-
-    public void setGenPath(String genPath)
-    {
-        this.genPath = genPath;
-    }
-
-    public void setPkColumn(GenTableColumn pkColumn)
-    {
-        this.pkColumn = pkColumn;
-    }
-
-    public void setSubTable(GenTable subTable)
-    {
-        this.subTable = subTable;
-    }
-
-    public void setColumns(List<GenTableColumn> columns)
-    {
-        this.columns = columns;
-    }
-
-    public void setOptions(String options)
-    {
-        this.options = options;
-    }
-
-    public void setTreeCode(String treeCode)
-    {
-        this.treeCode = treeCode;
-    }
-
-    public void setTreeParentCode(String treeParentCode)
-    {
-        this.treeParentCode = treeParentCode;
-    }
-
-    public void setTreeName(String treeName)
-    {
-        this.treeName = treeName;
-    }
-
-    public void setParentMenuId(Long parentMenuId)
-    {
-        this.parentMenuId = parentMenuId;
-    }
-
-    public void setParentMenuName(String parentMenuName)
-    {
-        this.parentMenuName = parentMenuName;
-    }
+    /** 是否开启Lombok 0-否，1是*/
+    private String isOpenLombok;
 
     public boolean isSub()
     {

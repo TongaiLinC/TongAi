@@ -205,4 +205,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
+	<insert id="createMenu">
+		${sql}
+	</insert>
+
 </mapper>

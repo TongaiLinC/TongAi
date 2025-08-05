@@ -96,6 +96,21 @@
       <el-col :span="12">
         <el-form-item>
           <span slot="label">
+            Lombok
+            <el-tooltip content="是否使用Lombok插件" placement="top">
+              <i class="el-icon-question"></i>
+            </el-tooltip>
+          </span>
+          <el-radio-group v-model="info.isOpenLombok">
+            <el-radio label="0" border>否</el-radio>
+            <el-radio label="1" border>是</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-col>
+
+      <el-col :span="12">
+        <el-form-item>
+          <span slot="label">
             数据权限
             <el-tooltip content="是否添加数据权限相关注解和代码" placement="top">
               <i class="el-icon-question"></i>

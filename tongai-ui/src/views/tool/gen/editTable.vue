@@ -222,6 +222,9 @@ export default {
       if (!this.info.isImportAndExport) {
         this.info.isImportAndExport = '0'
       }
+      if (!this.info.isOpenLombok) {
+        this.info.isOpenLombok = '1'
+      }
     }
   },
   mounted() {

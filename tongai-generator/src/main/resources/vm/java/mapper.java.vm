@@ -63,6 +63,7 @@ public interface ${ClassName}Mapper extends BaseMapper<${ClassName}>
      * @return 结果
      */
     public int delete${ClassName}By${pkColumn.capJavaField}s(${pkColumn.javaType}[] ${pkColumn.javaField}s);
+
 #if($table.sub)
 
     /**

@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.tawl.common.constant.GenConstants.IS_OPEN_LOMBOK;
+
 /**
  * 模板处理工具类
  * 
@@ -35,6 +37,9 @@ public class VelocityUtils
 
     /** 默认使用逻辑删除 */
     private static final String DEFAULT_TOMBSTONES = "1";
+
+    /** 默认使用逻辑删除 */
+    private static final String DEFAULT_IS_OPEN_LOMBOK = "1";
 
     /** 默认生成前端页面和API */
     private static final String DEFAULT_FRONT = "2";
@@ -87,6 +92,7 @@ public class VelocityUtils
         setDataAuthVelocityContext(velocityContext, genTable);
         setFrontVelocityContext(velocityContext, genTable);
         setImportAndExportVelocityContext(velocityContext, genTable);
+        setOpenLombokVelocityContext(velocityContext, genTable);
         if (GenConstants.TPL_TREE.equals(tplCategory))
         {
             setTreeVelocityContext(velocityContext, genTable);
@@ -104,6 +110,14 @@ public class VelocityUtils
         JSONObject paramsObj = JSON.parseObject(options);
         String isImportAndExport = getIsImportAndExport(paramsObj);
         context.put("isImportAndExport", isImportAndExport);
+    }
+
+    public static void setOpenLombokVelocityContext(VelocityContext context, GenTable genTable)
+    {
+        String options = genTable.getOptions();
+        JSONObject paramsObj = JSON.parseObject(options);
+        String isOpenLombok = getIsOpenLombok(paramsObj);
+        context.put("isOpenLombok", isOpenLombok);
     }
 
     public static void setMenuVelocityContext(VelocityContext context, GenTable genTable)
@@ -442,6 +456,22 @@ public class VelocityUtils
             return paramsObj.getString(GenConstants.TOMBSTONES);
         }
         return DEFAULT_TOMBSTONES;
+    }
+
+    /**
+     * 获取是否使用逻辑删除代码
+     *
+     * @param paramsObj 生成其他选项
+     * @return 是否添加数据权限代码
+     */
+    public static String getIsOpenLombok(JSONObject paramsObj)
+    {
+        if (StringUtils.isNotEmpty(paramsObj) && paramsObj.containsKey(IS_OPEN_LOMBOK)
+                && StringUtils.isNotEmpty(paramsObj.getString(IS_OPEN_LOMBOK)))
+        {
+            return paramsObj.getString(IS_OPEN_LOMBOK);
+        }
+        return DEFAULT_IS_OPEN_LOMBOK;
     }
 
     /**

@@ -7,7 +7,6 @@ import com.tawl.common.constant.GenConstants;
 import com.tawl.common.core.text.CharsetKit;
 import com.tawl.common.exception.ServiceException;
 import com.tawl.common.utils.StringUtils;
-import com.tawl.generator.config.GenConfig;
 import com.tawl.generator.domain.GenTable;
 import com.tawl.generator.domain.GenTableColumn;
 import com.tawl.generator.mapper.GenTableColumnMapper;
@@ -241,14 +240,10 @@ public class GenTableServiceImpl implements IGenTableService {
     setSubTable(table);
     // 设置主键列信息
     setPkColumn(table);
-
     // 设置代码生成其他配置
     setTableFromOptions(table);
-
     VelocityInitializer.initVelocity();
-
     VelocityContext context = VelocityUtils.prepareContext(table);
-
     // 获取模板列表
     List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory());
     for (String template : templates) {
@@ -258,9 +253,7 @@ public class GenTableServiceImpl implements IGenTableService {
       tpl.merge(context, sw);
       if (!template.equals("index-tree.vue.vm")) {
         // 如果选择了无前端或只生成api，则在渲染页面模板时跳过相应的步骤
-        boolean hasFrontTemplate = ("0".equals(table.getFrontTemplate())
-                && StringUtils.containsAny(template, "index.vue.vm", "api.js.vm"))
-                || ("1".equals(table.getFrontTemplate()) && template.contains("index.vue.vm"));
+        boolean hasFrontTemplate = ("0".equals(table.getFrontTemplate()) && StringUtils.containsAny(template, "index.vue.vm", "api.js.vm")) || ("1".equals(table.getFrontTemplate()) && template.contains("index.vue.vm"));
         if (hasFrontTemplate) {
           continue;
         }
@@ -471,6 +464,7 @@ public class GenTableServiceImpl implements IGenTableService {
       String frontTemplate = paramsObj.getString(GenConstants.FRONT_TEMPLATE);
       String tombstones = paramsObj.getString(GenConstants.TOMBSTONES);
       String isImportAndExport = paramsObj.getString(GenConstants.IS_IMPORT_AND_EXPORT);
+      String isOpenLombok = paramsObj.getString(GenConstants.IS_OPEN_LOMBOK);
 
       genTable.setTreeCode(treeCode);
       genTable.setTreeParentCode(treeParentCode);
@@ -481,6 +475,7 @@ public class GenTableServiceImpl implements IGenTableService {
       genTable.setFrontTemplate(frontTemplate);
       genTable.setTombstones(tombstones);
       genTable.setIsImportAndExport(isImportAndExport);
+      genTable.setIsOpenLombok(isOpenLombok);
     }
   }
 
@@ -513,15 +508,15 @@ public class GenTableServiceImpl implements IGenTableService {
    */
   @Override
   public void addMenu(Long tableId) {
-    // 查询表信息
+    String template = "vm/sql/sql.vm";
     GenTable table = genTableMapper.selectGenTableById(tableId);
-    String path = System.getProperty("user.dir") + File.separator + "sql" + File.separator
-            + table.getBusinessName() + "Menu.sql";
-
-    System.out.println("地址：" + GenConfig.url + "  用户名：" + GenConfig.getUsername() + "  密码：" + GenConfig.getPassword());
-    // scriptRunnerSqlUtil.setUrl(GenConfig.getUrl());
-    // scriptRunnerSqlUtil.setUsername(GenConfig.getUsername());
-    // scriptRunnerSqlUtil.setPassword(GenConfig.getPassword());
-    // scriptRunnerSqlUtil.runSql(path);
+    setSubTable(table);
+    setPkColumn(table);
+    VelocityInitializer.initVelocity();
+    VelocityContext context = VelocityUtils.prepareContext(table);
+    StringWriter sw = new StringWriter();
+    Template tpl = Velocity.getTemplate(template, Constants.UTF8);
+    tpl.merge(context, sw);
+    genTableMapper.createMenu(sw.toString());
   }
 }

@@ -89,4 +89,12 @@ public interface GenTableMapper
      * @return 结果
      */
     public int createTable(String sql);
+
+    /**
+     * 创建菜单
+     *
+     * @param sql 表结构
+     * @return 结果
+     */
+    public int createMenu(String sql);
 }

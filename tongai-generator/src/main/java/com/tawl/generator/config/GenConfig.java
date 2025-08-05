@@ -7,118 +7,70 @@ import org.springframework.stereotype.Component;
 
 /**
  * 读取代码生成相关配置
- * 
+ *
  * @author tongai
  */
 @Component
 @ConfigurationProperties(prefix = "gen")
-@PropertySource(value = { "classpath:generator.yml" })
-public class GenConfig
-{
-    /** 作者 */
-    public static String author;
+@PropertySource(value = {"classpath:generator.yml"})
+public class GenConfig {
+  /** 作者 */
+  public static String author;
 
-    /** 生成包路径 */
-    public static String packageName;
+  /** 生成包路径 */
+  public static String packageName;
 
-    /** 自动去除表前缀 */
-    public static boolean autoRemovePre;
+  /** 自动去除表前缀 */
+  public static boolean autoRemovePre;
 
-    /** 表前缀 */
-    public static String tablePrefix;
+  /** 表前缀 */
+  public static String tablePrefix;
 
-    /** 是否允许生成文件覆盖到本地（自定义路径） */
-    public static boolean allowOverwrite;
+  /** 是否允许生成文件覆盖到本地（自定义路径） */
+  public static boolean allowOverwrite;
 
-    /** 数据库链接地址 */
-    public static String url;
+  public static String getAuthor() {
+    return author;
+  }
 
-    /** 数据库连接用户名 */
-    public static String username;
+  @Value("${author}")
+  public void setAuthor(String author) {
+    GenConfig.author = author;
+  }
 
-    /** 数据库用户密码 */
-    public static String password;
+  public static String getPackageName() {
+    return packageName;
+  }
 
-    public static String getAuthor()
-    {
-        return author;
-    }
+  @Value("${packageName}")
+  public void setPackageName(String packageName) {
+    GenConfig.packageName = packageName;
+  }
 
-    @Value("${author}")
-    public void setAuthor(String author)
-    {
-        GenConfig.author = author;
-    }
+  public static boolean getAutoRemovePre() {
+    return autoRemovePre;
+  }
 
-    public static String getPackageName()
-    {
-        return packageName;
-    }
+  @Value("${autoRemovePre}")
+  public void setAutoRemovePre(boolean autoRemovePre) {
+    GenConfig.autoRemovePre = autoRemovePre;
+  }
 
-    @Value("${packageName}")
-    public void setPackageName(String packageName)
-    {
-        GenConfig.packageName = packageName;
-    }
+  public static String getTablePrefix() {
+    return tablePrefix;
+  }
 
-    public static boolean getAutoRemovePre()
-    {
-        return autoRemovePre;
-    }
+  @Value("${tablePrefix}")
+  public void setTablePrefix(String tablePrefix) {
+    GenConfig.tablePrefix = tablePrefix;
+  }
 
-    @Value("${autoRemovePre}")
-    public void setAutoRemovePre(boolean autoRemovePre)
-    {
-        GenConfig.autoRemovePre = autoRemovePre;
-    }
+  public static boolean isAllowOverwrite() {
+    return allowOverwrite;
+  }
 
-    public static String getTablePrefix()
-    {
-        return tablePrefix;
-    }
-
-    @Value("${tablePrefix}")
-    public void setTablePrefix(String tablePrefix)
-    {
-        GenConfig.tablePrefix = tablePrefix;
-    }
-
-    public static boolean isAllowOverwrite()
-    {
-        return allowOverwrite;
-    }
-
-    @Value("${allowOverwrite}")
-    public void setAllowOverwrite(boolean allowOverwrite)
-    {
-        GenConfig.allowOverwrite = allowOverwrite;
-    }
-
-
-    public static String getUrl() {
-        return url;
-    }
-
-    @Value("${url}")
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public static String getUsername() {
-        return username;
-    }
-
-    @Value("${username}")
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public static String getPassword() {
-        return password;
-    }
-
-    @Value("${password}")
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  @Value("${allowOverwrite}")
+  public void setAllowOverwrite(boolean allowOverwrite) {
+    GenConfig.allowOverwrite = allowOverwrite;
+  }
 }
